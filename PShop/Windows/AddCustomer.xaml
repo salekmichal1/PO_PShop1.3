@@ -1,0 +1,77 @@
+﻿<Window x:Class="PShop.Windows.AddCustomer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PShop.Windows"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="AddCustomer" MinWidth="500"  WindowStartupLocation="CenterScreen" FontFamily="Century Gothic">
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="Dodaj klienta" Margin="0" Foreground="Black" TextAlignment="Center" FontSize="20" ></TextBlock>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Imie:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientName" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Nazwisko:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientSurname" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Firma:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientCompanyName" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="NIP:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientCompanyNubmer" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Mail:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientMail" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Numer telefonu:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientPhone" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Miasto:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientCity" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Ulica:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientStreet" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Numer domu:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientStreetNumber" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Numer mieszkania:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientFlatNumber" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                <TextBlock Text="Kod pocztowy:" Margin="0 2 8 0" MinWidth="110" TextAlignment="Right"></TextBlock>
+                <TextBox x:Name="clientPostCode" materialDesign:HintAssist.Hint="wymagane" FontSize="10" Foreground="Black" Width="100" MaxWidth="200" BorderThickness="0 0 0 1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+                
+
+            </StackPanel>
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true" HorizontalAlignment="Center" Margin="0 10"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnAddClientData" Content="Dodaj kienta" Cursor="Hand" Height="20" Click="btnAddClientData_Click">
+            </Button>
+
+        </StackPanel>
+    </Grid>
+</Window>
