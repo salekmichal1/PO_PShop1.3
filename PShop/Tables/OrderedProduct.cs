@@ -7,21 +7,14 @@ using System.Threading.Tasks;
 
 namespace PShop.Tables
 {
-    public class OrderedProduct
+    public partial class OrderedProduct
     {
-        [Key]
+        public int Id { get; set; }
+        public int OrderId { get; set; }
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
 
-        public int id { get; set; }
-
-        public int orderId { get; set; }
-
-        public int productId { get; set; }
-
-        public int quantity { get; set; }
-
-        public Product product { get; set; }
-
-        public Order order { get; set; }
-
+        public virtual Order Order { get; set; } = null!;
+        public virtual Product Product { get; set; } = null!;
     }
 }

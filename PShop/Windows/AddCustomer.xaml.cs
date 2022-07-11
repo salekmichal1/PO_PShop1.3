@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using PShop.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,42 +26,59 @@ namespace PShop.Windows
             InitializeComponent();
         }
 
-        public void insertData(string query)
-        {
-            SqlConnection conection = new SqlConnection(@"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True");
+        //public void insertData(string query)
+        //{
+        //    SqlConnection conection = new SqlConnection(@"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True");
 
-            conection.Open();
-            SqlCommand command = new SqlCommand(query, conection);
-            SqlDataAdapter adapter = new SqlDataAdapter();
+        //    conection.Open();
+        //    SqlCommand command = new SqlCommand(query, conection);
+        //    SqlDataAdapter adapter = new SqlDataAdapter();
 
-            adapter.InsertCommand = new SqlCommand(query, conection);
-            adapter.InsertCommand.ExecuteNonQuery();
+        //    adapter.InsertCommand = new SqlCommand(query, conection);
+        //    adapter.InsertCommand.ExecuteNonQuery();
 
-            command.Dispose();
-            conection.Close();
-        }
+        //    command.Dispose();
+        //    conection.Close();
+        //}
 
         private void btnAddClientData_Click(object sender, RoutedEventArgs e)
         {
-            SqlConnection conection = new SqlConnection(@"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True");
-            string queryId = $"SELECT MAX(id) FROM Customers";
-            conection.Open();
-            SqlCommand commandId = new SqlCommand(queryId, conection);
-            int id = Convert.ToInt32(commandId.ExecuteScalar());
+            //SqlConnection conection = new SqlConnection(@"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True");
+            //string queryId = $"SELECT MAX(id) FROM Customers";
+            //conection.Open();
+            //SqlCommand commandId = new SqlCommand(queryId, conection);
+            //int id = Convert.ToInt32(commandId.ExecuteScalar());
 
-            commandId.Dispose();
-            conection.Close();
-
+            //commandId.Dispose();
+            //conection.Close();
             try
-            {             
-                string query = $"SET IDENTITY_INSERT Customers ON INSERT INTO Customers(id, customer_name, surname, company_name, company_number, street, street_number, flat_number, post_code, city, phone_number, mail) VALUES ({id+1}, '{clientName.Text}', '{clientSurname.Text}', {((clientCompanyName.Text != "") ? $"'{clientCompanyName.Text}'" : "NULL")}, {(int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : "NULL")}, '{clientStreet.Text}', {int.Parse(clientStreetNumber.Text)}, {(int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : "NULL")}, '{clientPostCode.Text}', '{clientCity.Text}', '{clientPhone.Text}', '{clientMail.Text}') SET IDENTITY_INSERT Customers OFF";
-                insertData(query);
+            {
+                //string query = $"SET IDENTITY_INSERT Customers ON INSERT INTO Customers(id, customer_name, surname, company_name, company_number, street, street_number, flat_number, post_code, city, phone_number, mail) VALUES ({id+1}, '{clientName.Text}', '{clientSurname.Text}', {((clientCompanyName.Text != "") ? $"'{clientCompanyName.Text}'" : "NULL")}, {(int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : "NULL")}, '{clientStreet.Text}', {int.Parse(clientStreetNumber.Text)}, {(int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : "NULL")}, '{clientPostCode.Text}', '{clientCity.Text}', '{clientPhone.Text}', '{clientMail.Text}') SET IDENTITY_INSERT Customers OFF";
+                //insertData(query);
+
+                App.dbContext.Customers.AddAsync(new Customer
+                {
+                    
+                    CustomerName = clientName.Text,
+                    Surname = clientSurname.Text,
+                    CompanyName = ((clientCompanyName.Text == null) ? clientCompanyName.Text : null),
+                    CompanyNumber = (int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : null),
+                    Street = clientStreet.Text,
+                    StreetNumber = int.Parse(clientStreetNumber.Text),
+                    FlatNumber = (int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : null),
+                    PostCode = clientPostCode.Text,
+                    City = clientCity.Text,
+                    PhoneNumber = clientPhone.Text,
+                    Mail = clientMail.Text
+                });
+                App.dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Błędne dane. Sprawdź poprawność");
+                MessageBox.Show(ex.InnerException.Message);
+                App.dbContext.DisposeAsync();
+
             }
-            this.Close();
         }
     }
 }

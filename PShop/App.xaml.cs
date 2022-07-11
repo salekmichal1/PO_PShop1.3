@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PShop.Tables;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,12 +15,8 @@ namespace PShop
     public partial class App : Application
     {
         static string connectionString = @"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True";
-        public static ApplicationDbContext dbContext;
+        public static ApplicationDbContext dbContext = new ApplicationDbContext(connectionString);
 
-        private void Application_Startup(object sender, StartupEventArgs e)
-        {
-            dbContext = new ApplicationDbContext(connectionString);
-        }
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {

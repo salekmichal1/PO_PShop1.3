@@ -7,34 +7,28 @@ using System.Threading.Tasks;
 
 namespace PShop.Tables
 {
-    public class Customer
+    public partial class Customer
     {
+        //public Customer()
+        //{
+        //    Orders = new HashSet<Order>();
+        //}
         [Key]
+        public int Id { get; set; }
+        public string CustomerName { get; set; } = null!;
+        public string Surname { get; set; } = null!;
+        public string? CompanyName { get; set; }
+        public int? CompanyNumber { get; set; }
+        public string Street { get; set; } = null!;
+        public int StreetNumber { get; set; }
+        public int? FlatNumber { get; set; }
+        public string PostCode { get; set; } = null!;
+        public string City { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
+        public string Mail { get; set; } = null!;
 
-        public int id { get; set; }
+        public List<Order> Orders { get; } = new List<Order>();
 
-        public string customerName { get; set; }
-
-        public string customerSurname { get; set; }
-
-        public string? companyName { get; set; }
-
-        public int? companyNumber { get; set; }
-
-        public string street { get; set; }
-
-        public int streetNumber { get; set; }
-
-        public int? flatNumber { get; set; }
-
-        public string postCode { get; set; }
-
-        public string city { get; set; }
-
-        public string phoneNumber { get; set; }
-
-        public string mail { get; set; }
-
-        public List<Order> order { get; } = new List<Order>();
+        //public virtual ICollection<Order> Orders { get; set; }
     }
 }

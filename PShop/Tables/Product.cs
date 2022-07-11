@@ -7,20 +7,25 @@ using System.Threading.Tasks;
 
 namespace PShop.Tables
 {
-    public class Product
+    public partial class Product
     {
+        //public Product()
+        //{
+        //    OrderedProducts = new HashSet<OrderedProduct>();
+        //}
         [Key]
+        public int Id { get; set; }
+        public string ProductName { get; set; } = null!;
+        public int CategoryId { get; set; }
+        public int ProducerId { get; set; }
+        public short AvailablePieces { get; set; }
+        public decimal NetCatalogPrice { get; set; }
+        public decimal NetSellingPrice { get; set; }
+        public decimal NetSellingWarehouse { get; set; }
+        public byte VatRate { get; set; }
 
-        public int id { get; set; }
+        public List<OrderedProduct> OrderedProducts { get; } = new List<OrderedProduct>();
 
-        public string productName { get; set; }
-
-        public int availablePieces { get; set; }
-
-        public decimal netPrice { get; set; }
-
-        public decimal netSellingPrice { get; set; }
-
-        public List<OrderedProduct> orderedProduct { get; } = new List<OrderedProduct>();
+        //public virtual ICollection<OrderedProduct> OrderedProducts { get; set; }
     }
 }

@@ -7,24 +7,26 @@ using System.Threading.Tasks;
 
 namespace PShop.Tables
 {
-    public class Order
+    public partial class Order
     {
+        //public Order()
+        //{
+        //    OrderedProducts = new HashSet<OrderedProduct>();
+        //}
         [Key]
+        public int Id { get; set; }
+        public int CustomerId { get; set; }
+        public DateTime DateOfPlacingTheOrder { get; set; }
+        public DateTime? OrderRealizationDate { get; set; }
+        public bool? WhetherTheOrderFulfilled { get; set; }
+        public DateTime? ShippingDate { get; set; }
+        public int EmployeeId { get; set; }
+        public int InvoiceId { get; set; }
 
-        public int id { get; set; }
+        public virtual Customer Customer { get; set; } = null!;
+        public virtual Employee Employee { get; set; } = null!;
+        public List<OrderedProduct> OrderedProducts { get; } = new List<OrderedProduct>();
 
-        public DateTime dateOfPlacingTheOrder { get; set; }
-
-        public bool whetherTheOrderFulfilled { get; set; }
-
-        public int customerId { get; set; }
-
-        public int employeeId { get; set; }
-
-        public List<OrderedProduct> orderedProduct { get; } = new List<OrderedProduct>();
-
-        public Customer customer { get; set; }
-
-        public Employee employee { get; set; }
+        //public virtual ICollection<OrderedProduct> OrderedProducts { get; set; }
     }
 }

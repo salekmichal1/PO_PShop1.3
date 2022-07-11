@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace PShop.Tables
 {
-    public class Employee
+    public partial class Employee
     {
+        //public Employee()
+        //{
+        //    Orders = new HashSet<Order>();
+        //}
         [Key]
-
         public int Id { get; set; }
+        public string EmployeeName { get; set; } = null!;
+        public string EmployeeSurname { get; set; } = null!;
+        public string Mail { get; set; } = null!;
+        public string Login { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public decimal? EmployeeBonus { get; set; }
 
-        public string employeeName { get; set; }
+        public List<Order> Orders { get; } = new List<Order>();
 
-        public string employeeSurname { get; set; }
-
-        public string login { get; set; }
-
-        public string password { get; set; }
-
-        public decimal? employeeBonus { get; set; }
-
-        public List<Order> order { get; } = new List<Order>();
-
+        //public virtual ICollection<Order> Orders { get; set; }
     }
 }

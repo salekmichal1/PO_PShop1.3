@@ -59,7 +59,7 @@
                         </Border>
                         <StackPanel>
                             <DataGrid AutoGenerateColumns="True" x:Name="orderData"  IsReadOnly="True" >
-
+                                
                             </DataGrid>
                         </StackPanel>
                     </StackPanel>
