@@ -23,6 +23,7 @@ namespace PShop
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
         //public MainWindow()
@@ -44,6 +45,7 @@ namespace PShop
         //    command.Dispose();
         //    conection.Close();
         //}
+        
 
         private void btnFind_Click(object sender, RoutedEventArgs e)
         {
@@ -188,13 +190,45 @@ namespace PShop
         private void btnAddClient_Click(object sender, RoutedEventArgs e)
         {
             AddCustomer addCustomer = new AddCustomer();
-
+            
             addCustomer.Show();
         }
 
         private void btnNewOrder_Click(object sender, RoutedEventArgs e)
         {
+            NewOrder newOrder = new NewOrder();
 
+            newOrder.Show();
+        }
+
+        public List<Customer> customers = new List<Customer>();
+
+        private void newOrderFindClient1_GotFocus(object sender, RoutedEventArgs e)
+        {
+            //customers = (from Customer in App.dbContext.Customers
+            //              select new
+            //               {
+            //                    Customer.Surname
+            //               }).ToList();
+
+            var empnamesEnum = (from Customer in App.dbContext.Customers
+                               select $"{Customer.CustomerName}").ToList();
+            var empnamesEnum1 = (from Customer in App.dbContext.Customers
+                               select $"{Customer.Surname}").ToList();
+            List<string> empnames = new List<string>();
+
+            for(int i = 0; i < empnamesEnum.Count; i++)
+            {
+                empnames.Add(empnamesEnum[i]);
+                empnames.Add(empnamesEnum1[i]);
+            }
+            newOrderFindClient1.ItemsSource = empnames;
+
+            //foreach (string cus in empnames)
+            //{
+            //    MessageBox.Show(cus);
+            //}
         }
     }
+    
 }

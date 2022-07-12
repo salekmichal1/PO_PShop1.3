@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PShop"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="200" MaxWidth="1440" MinWidth="620" WindowStartupLocation="CenterScreen" FontFamily="Century Gothic">
     <Grid Margin="0,0,0,0">
@@ -87,6 +89,41 @@
                                 </Button>
                             </StackPanel>
                         </Border>
+                        <StackPanel>
+                            <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                                    <materialDesign:PackIcon Kind="OrderAlphabeticalAscending" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
+
+                                    <TextBox x:Name="newOrderFindClient" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź klienta" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />
+
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindClient" Content="Szukaj" Cursor="Hand" Height="20" >
+                                    </Button>
+                                    <input:AutoCompleteBox x:Name="newOrderFindClient1" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindClient1_GotFocus" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel>
+                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderClient"  IsReadOnly="True" >
+
+                            </DataGrid>
+                            <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                                    <materialDesign:PackIcon Kind="OrderAlphabeticalAscending" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
+
+                                    <TextBox x:Name="newOrderFindProduct" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />
+
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindProduct" Content="Szukaj" Cursor="Hand" Height="20" >
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderProduct"  IsReadOnly="True">
+                                
+                            </DataGrid>
+                        </StackPanel>
 
                     </StackPanel>
 

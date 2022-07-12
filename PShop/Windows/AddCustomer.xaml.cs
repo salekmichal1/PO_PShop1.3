@@ -51,33 +51,44 @@ namespace PShop.Windows
 
             //commandId.Dispose();
             //conection.Close();
+           
             try
             {
                 //string query = $"SET IDENTITY_INSERT Customers ON INSERT INTO Customers(id, customer_name, surname, company_name, company_number, street, street_number, flat_number, post_code, city, phone_number, mail) VALUES ({id+1}, '{clientName.Text}', '{clientSurname.Text}', {((clientCompanyName.Text != "") ? $"'{clientCompanyName.Text}'" : "NULL")}, {(int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : "NULL")}, '{clientStreet.Text}', {int.Parse(clientStreetNumber.Text)}, {(int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : "NULL")}, '{clientPostCode.Text}', '{clientCity.Text}', '{clientPhone.Text}', '{clientMail.Text}') SET IDENTITY_INSERT Customers OFF";
                 //insertData(query);
+                var email = App.dbContext.Customers.FirstOrDefault(u => u.Mail.ToLower() == clientMail.Text.ToLower());
 
-                App.dbContext.Customers.AddAsync(new Customer
+                if (email == null)
                 {
-                    
-                    CustomerName = clientName.Text,
-                    Surname = clientSurname.Text,
-                    CompanyName = ((clientCompanyName.Text == null) ? clientCompanyName.Text : null),
-                    CompanyNumber = (int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : null),
-                    Street = clientStreet.Text,
-                    StreetNumber = int.Parse(clientStreetNumber.Text),
-                    FlatNumber = (int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : null),
-                    PostCode = clientPostCode.Text,
-                    City = clientCity.Text,
-                    PhoneNumber = clientPhone.Text,
-                    Mail = clientMail.Text
-                });
-                App.dbContext.SaveChangesAsync();
+                    App.dbContext.Customers.AddAsync(new Customer
+                    {
+                        CustomerName = clientName.Text,
+                        Surname = clientSurname.Text,
+                        CompanyName = ((clientCompanyName.Text != "") ? clientCompanyName.Text : null),
+                        CompanyNumber = (int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : null),
+                        Street = clientStreet.Text,
+                        StreetNumber = int.Parse(clientStreetNumber.Text),
+                        FlatNumber = (int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : null),
+                        PostCode = clientPostCode.Text,
+                        City = clientCity.Text,
+                        PhoneNumber = clientPhone.Text,
+                        Mail = clientMail.Text
+                    });
+                    App.dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    MessageBox.Show("Email już istnieje");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.Message);
+            }
+            finally
+            {
                 App.dbContext.DisposeAsync();
-
+                this.Close();
             }
         }
     }
