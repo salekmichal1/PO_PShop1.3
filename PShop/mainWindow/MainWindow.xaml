@@ -36,6 +36,7 @@
                     </Setter>
                 </Style>
             </TabControl.Resources>
+            
             <TabItem x:Name="tabItem">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -98,33 +99,40 @@
 
                                     <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
                                     materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
-                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindClient" Content="Szukaj" Cursor="Hand" Height="20" >
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindClient" Content="Szukaj" Cursor="Hand" Height="20" Click="btnNewOrderFindClient_Click">
                                     </Button>
-                                    <input:AutoCompleteBox x:Name="newOrderFindClient1" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindClient1_GotFocus" />
                                 </StackPanel>
                             </Border>
                         </StackPanel>
-                        <StackPanel>
-                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderClient"  IsReadOnly="True" >
+                        <StackPanel Margin="0 0 0 20">
+                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderClientData" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding}" MouseDoubleClick="newOrderClientData_MouseDoubleClick" >
 
                             </DataGrid>
                             <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
                                     <materialDesign:PackIcon Kind="OrderAlphabeticalAscending" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
+                                    <input:AutoCompleteBox x:Name="newOrderFindProduct" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindClient1_GotFocus" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="70" MaxWidth="200"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow">
 
-                                    <TextBox x:Name="newOrderFindProduct" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />
+                                    </input:AutoCompleteBox>
 
+                                    <!--= <TextBox x:Name="newOrderFindProduct" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />=-->
                                     <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
                                     materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
-                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindProduct" Content="Szukaj" Cursor="Hand" Height="20" >
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindProduct" Content="Szukaj" Cursor="Hand" Height="20" Click="btnNewOrderFindProduct_Click" >
                                     </Button>
                                 </StackPanel>
                             </Border>
-                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderProduct"  IsReadOnly="True">
+                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderProductData" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding}" MouseDoubleClick="newOrderProductData_MouseDoubleClick">
                                 
                             </DataGrid>
                         </StackPanel>
+                        <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
+                        <StackPanel >
+                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderAddedProducts" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding}" MouseDoubleClick="newOrderAddedProducts_MouseDoubleClick">
 
+                            </DataGrid>
+                        </StackPanel>
+                        </Border>
                     </StackPanel>
 
                 </Grid>

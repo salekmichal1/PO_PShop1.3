@@ -2,6 +2,7 @@
 using PShop.Tables;
 using PShop.Windows;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using static PShop.LoginWindow;
 namespace PShop
 {
     /// <summary>
@@ -26,12 +27,10 @@ namespace PShop
     /// 
     public partial class MainWindow : Window
     {
-        //public MainWindow()
-        //{
-        //    InitializeComponent();
-        //    orderData.ItemsSource = order;
-        //    orderData.Items.Refresh();
-        //}
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
 
         //public void downloadData(string query, DataGrid tableData)
         //{
@@ -45,7 +44,7 @@ namespace PShop
         //    command.Dispose();
         //    conection.Close();
         //}
-        
+
 
         private void btnFind_Click(object sender, RoutedEventArgs e)
         {
@@ -205,29 +204,118 @@ namespace PShop
 
         private void newOrderFindClient1_GotFocus(object sender, RoutedEventArgs e)
         {
-            //customers = (from Customer in App.dbContext.Customers
-            //              select new
-            //               {
-            //                    Customer.Surname
-            //               }).ToList();
+            //customers = (from customer in App.dbContext.Customers
+            //             select new
+            //             {
+            //                 customer.Surname
+            //             }).ToDictionary();
 
-            var empnamesEnum = (from Customer in App.dbContext.Customers
-                               select $"{Customer.CustomerName}").ToList();
-            var empnamesEnum1 = (from Customer in App.dbContext.Customers
-                               select $"{Customer.Surname}").ToList();
-            List<string> empnames = new List<string>();
+            var empnamesEnum = from Product in App.dbContext.Products
+                               select $"{(Product.Id).ToString()} {Product.ProductName}";
 
-            for(int i = 0; i < empnamesEnum.Count; i++)
-            {
-                empnames.Add(empnamesEnum[i]);
-                empnames.Add(empnamesEnum1[i]);
-            }
-            newOrderFindClient1.ItemsSource = empnames;
+            List<string> empnames = empnamesEnum.ToList();
+            newOrderFindProduct.ItemsSource = empnames;
 
             //foreach (string cus in empnames)
             //{
             //    MessageBox.Show(cus);
             //}
+
+        }
+
+        private void btnNewOrderFindClient_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (newOrderFindClient.Text != "")
+                {
+                    var customers = from Customer in App.dbContext.Customers
+                                    where Customer.PhoneNumber == newOrderFindClient.Text || Customer.CompanyNumber == int.Parse(newOrderFindClient.Text)
+                                    select new
+                                    {
+                                        Imie = Customer.CustomerName,
+                                        Nazwisko = Customer.Surname,
+                                        Frima = Customer.CompanyName,
+                                        NIP = Customer.CompanyNumber,
+                                        Ulica = Customer.Street,
+                                        Numer_domu = Customer.StreetNumber,
+                                        Numer_mieszkania = Customer.FlatNumber,
+                                        Kod_pocztowy = Customer.PostCode,
+                                        Miasto = Customer.City,
+                                        Numer_telefonu = Customer.PhoneNumber,
+                                        Mail = Customer.Mail
+                                    };
+                    newOrderClientData.ItemsSource = customers.ToList();
+                    newOrderClientData.Items.Refresh();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnNewOrderFindProduct_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int number;
+                if (newOrderFindProduct.Text != "")
+                {
+                    var produts = from Product in App.dbContext.Products
+                                    where Product.ProductName == newOrderFindProduct.Text || Product.Id == (int.TryParse(newOrderFindProduct.Text, out number) ? number : 0)
+                                  select new
+                                    {
+                                        SKU = Product.Id,
+                                        Nazwa = Product.ProductName,
+                                        Cena = Product.NetSellingPrice
+                                    };
+                    newOrderProductData.ItemsSource = produts.ToList();
+                    newOrderProductData.Items.Refresh();
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.InnerException.Message);
+            }
+        }
+
+        private void newOrderClientData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Ensure row was clicked and not empty space
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender,
+                                                e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row == null) return;
+
+            MessageBox.Show("dupa"); 
+        }
+
+        private void newOrderProductData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender,
+                                    e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row == null) return;
+
+            IEnumerable<ItemsControl> enumerable = (IEnumerable<ItemsControl>)newOrderProductData.ItemsSource;
+            List<ItemsControl> mylist = enumerable.ToList();
+
+            MessageBox.Show((newOrderProductData.ItemsSource).GetType().ToString());
+        }
+
+        private void newOrderAddedProducts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            
         }
     }
     

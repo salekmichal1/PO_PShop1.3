@@ -25,6 +25,12 @@ namespace PShop
         {
             InitializeComponent();
         }
+        public int count;
+
+        public class Global
+        {
+            public static int? employeeId;
+        }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
@@ -37,14 +43,15 @@ namespace PShop
                 if(sqlConnection.State == ConnectionState.Closed)
                 {
                     sqlConnection.Open();
-                    string query = "SELECT COUNT(1) FROM Employees WHERE login=@login AND password=@password";
+                    string query = "SELECT id FROM Employees WHERE login=@login AND password=@password";
                     SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                     sqlCommand.CommandType = CommandType.Text;
                     sqlCommand.Parameters.AddWithValue("@login", txtUsername.Text);
                     sqlCommand.Parameters.AddWithValue("@password", txtPassword.Password);
-                    int count = Convert.ToInt32(sqlCommand.ExecuteScalar());
-                    if(count == 1)
+                    count = Convert.ToInt32(sqlCommand.ExecuteScalar());
+                    if(Convert.ToBoolean(count))
                     {
+                        Global.employeeId = count;
                         MainWindow dashboard = new MainWindow();
                         dashboard.Show();
                         this.Close();
