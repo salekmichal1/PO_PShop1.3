@@ -6,10 +6,11 @@
         xmlns:local="clr-namespace:PShop"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
-        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit" xmlns:controls="http://schemas.microsoft.com/xps/2005/06"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="200" MaxWidth="1440" MinWidth="620" WindowStartupLocation="CenterScreen" FontFamily="Century Gothic">
     <Grid Margin="0,0,0,0">
+
         <TabControl Width="auto">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
@@ -88,6 +89,10 @@
                                     materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
                                     Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrder" Content="Nowe zamówienie" Cursor="Hand" Height="20" Click="btnNewOrder_Click">
                                 </Button>
+                                <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true" Margin="10 0 0 0"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnProductAdd" Content="Dodaj produkty" Cursor="Hand" Height="20" Click="btnProductAdd_Click">
+                                </Button>
                             </StackPanel>
                         </Border>
                         <StackPanel>
@@ -103,36 +108,23 @@
                                     </Button>
                                 </StackPanel>
                             </Border>
-                        </StackPanel>
-                        <StackPanel Margin="0 0 0 20">
-                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderClientData" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding}" MouseDoubleClick="newOrderClientData_MouseDoubleClick" >
+                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderClientData" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding}" >
 
                             </DataGrid>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Lista produktów" Margin="0" Foreground="Black" TextAlignment="Center" FontSize="20" ></TextBlock>
                             <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
-                                    <materialDesign:PackIcon Kind="OrderAlphabeticalAscending" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
-                                    <input:AutoCompleteBox x:Name="newOrderFindProduct" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindClient1_GotFocus" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="70" MaxWidth="200"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow">
 
-                                    </input:AutoCompleteBox>
-
-                                    <!--= <TextBox x:Name="newOrderFindProduct" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />=-->
-                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
-                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
-                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindProduct" Content="Szukaj" Cursor="Hand" Height="20" Click="btnNewOrderFindProduct_Click" >
-                                    </Button>
+                                <StackPanel>
+                                    <DataGrid AutoGenerateColumns="True" x:Name="newOrderAddedProducts" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="True" ItemsSource="{Binding Product}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn x:Name="productQuantity" Binding="{Binding quantity}"></DataGridTextColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </StackPanel>
                             </Border>
-                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderProductData" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding}" MouseDoubleClick="newOrderProductData_MouseDoubleClick">
-                                
-                            </DataGrid>
                         </StackPanel>
-                        <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
-                        <StackPanel >
-                            <DataGrid AutoGenerateColumns="True" x:Name="newOrderAddedProducts" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding}" MouseDoubleClick="newOrderAddedProducts_MouseDoubleClick">
-
-                            </DataGrid>
-                        </StackPanel>
-                        </Border>
                     </StackPanel>
 
                 </Grid>

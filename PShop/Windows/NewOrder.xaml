@@ -3,10 +3,42 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PShop.Windows"
+        xmlns:local="clr-namespace:PShop"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit" xmlns:controls="http://schemas.microsoft.com/xps/2005/06"
         mc:Ignorable="d"
-        Title="NewOrder" Height="450" Width="800">
+        Title="NewOrder" MinHeight="200" MaxWidth="1440" MinWidth="620" WindowStartupLocation="CenterScreen" FontFamily="Century Gothic">
     <Grid>
-        
+        <StackPanel>
+            <TextBlock Text="Dodaj produkt" Margin="0" Foreground="Black" TextAlignment="Center" FontSize="20" ></TextBlock>
+
+            
+            <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                    <materialDesign:PackIcon Kind="AddShoppingCart" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
+                    
+                    <input:AutoCompleteBox x:Name="newOrderFindProduct" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindClient1_GotFocus" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="70" MaxWidth="200"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow">
+
+                    </input:AutoCompleteBox>
+                    <TextBox PreviewTextInput="TextBox_PreviewTextInput" x:Name="productQuantity" Margin="0 0 10 0" Padding="2"  materialDesign:HintAssist.Hint="Ilość" FontSize="10" Foreground="Black" MaxWidth="30"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" ></TextBox>
+                    <!--= <TextBox x:Name="newOrderFindProduct" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />=-->
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrderFindProduct" Content="Szukaj" Cursor="Hand" Height="20" Click="btnNewOrderFindProduct_Click" >
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true" Margin="10 0"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnAddProduct" Content="Dodaj" Cursor="Hand" Height="20" Click="btnAddProduct_Click" >
+                    </Button>
+                </StackPanel>
+            </Border>
+            <StackPanel Margin="0 0 0 20">
+            <DataGrid AutoGenerateColumns="True" x:Name="newOrderProductData" CanUserAddRows="False" CanUserDeleteRows="True" IsReadOnly="true" ItemsSource="{Binding Path=Product}" SelectedItem="{Binding Path=SelectedProduct, Mode=TwoWay}">
+
+            </DataGrid>
+            </StackPanel>
+
+        </StackPanel>
     </Grid>
 </Window>

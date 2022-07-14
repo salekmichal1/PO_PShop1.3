@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static PShop.LoginWindow;
+
 namespace PShop
 {
     /// <summary>
@@ -31,7 +32,12 @@ namespace PShop
         {
             InitializeComponent();
         }
+        public static class GlobalsList
+        {
+           static public List<int> selectedProductId = new List<int>();
+            static public List<int> productQunatity = new List<int>();
 
+        }
         //public void downloadData(string query, DataGrid tableData)
         //{
         //    SqlConnection conection = new SqlConnection(@"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True");
@@ -195,33 +201,9 @@ namespace PShop
 
         private void btnNewOrder_Click(object sender, RoutedEventArgs e)
         {
-            NewOrder newOrder = new NewOrder();
-
-            newOrder.Show();
-        }
-
-        public List<Customer> customers = new List<Customer>();
-
-        private void newOrderFindClient1_GotFocus(object sender, RoutedEventArgs e)
-        {
-            //customers = (from customer in App.dbContext.Customers
-            //             select new
-            //             {
-            //                 customer.Surname
-            //             }).ToDictionary();
-
-            var empnamesEnum = from Product in App.dbContext.Products
-                               select $"{(Product.Id).ToString()} {Product.ProductName}";
-
-            List<string> empnames = empnamesEnum.ToList();
-            newOrderFindProduct.ItemsSource = empnames;
-
-            //foreach (string cus in empnames)
-            //{
-            //    MessageBox.Show(cus);
-            //}
 
         }
+
 
         private void btnNewOrderFindClient_Click(object sender, RoutedEventArgs e)
         {
@@ -259,64 +241,13 @@ namespace PShop
             }
         }
 
-        private void btnNewOrderFindProduct_Click(object sender, RoutedEventArgs e)
+        private void btnProductAdd_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                int number;
-                if (newOrderFindProduct.Text != "")
-                {
-                    var produts = from Product in App.dbContext.Products
-                                    where Product.ProductName == newOrderFindProduct.Text || Product.Id == (int.TryParse(newOrderFindProduct.Text, out number) ? number : 0)
-                                  select new
-                                    {
-                                        SKU = Product.Id,
-                                        Nazwa = Product.ProductName,
-                                        Cena = Product.NetSellingPrice
-                                    };
-                    newOrderProductData.ItemsSource = produts.ToList();
-                    newOrderProductData.Items.Refresh();
-                }
-                else
-                {
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.InnerException.Message);
-            }
+            NewOrder newOrder = new NewOrder();
+
+            newOrder.Show();
         }
-
-        private void newOrderClientData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            // Ensure row was clicked and not empty space
-            var row = ItemsControl.ContainerFromElement((DataGrid)sender,
-                                                e.OriginalSource as DependencyObject) as DataGridRow;
-
-            if (row == null) return;
-
-            MessageBox.Show("dupa"); 
-        }
-
-        private void newOrderProductData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            
-            var row = ItemsControl.ContainerFromElement((DataGrid)sender,
-                                    e.OriginalSource as DependencyObject) as DataGridRow;
-
-            if (row == null) return;
-
-            IEnumerable<ItemsControl> enumerable = (IEnumerable<ItemsControl>)newOrderProductData.ItemsSource;
-            List<ItemsControl> mylist = enumerable.ToList();
-
-            MessageBox.Show((newOrderProductData.ItemsSource).GetType().ToString());
-        }
-
-        private void newOrderAddedProducts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
+        
     }
     
 }
