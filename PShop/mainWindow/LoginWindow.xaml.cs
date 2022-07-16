@@ -29,7 +29,7 @@ namespace PShop
 
         public class Global
         {
-            public static int? employeeId;
+            public static int employeeId;
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)

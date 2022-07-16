@@ -21,7 +21,7 @@
                     <input:AutoCompleteBox x:Name="newOrderFindProduct" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindClient1_GotFocus" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="70" MaxWidth="200"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow">
 
                     </input:AutoCompleteBox>
-                    <TextBox PreviewTextInput="TextBox_PreviewTextInput" x:Name="productQuantity" Margin="0 0 10 0" Padding="2"  materialDesign:HintAssist.Hint="Ilość" FontSize="10" Foreground="Black" MaxWidth="30"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" ></TextBox>
+                    <TextBox PreviewTextInput="TextBox_PreviewTextInput" x:Name="productQuantity" Margin="0 0 10 0" Padding="2"  materialDesign:HintAssist.Hint="Ilość" FontSize="10" Foreground="Black" MaxWidth="30"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow" ></TextBox>
                     <!--= <TextBox x:Name="newOrderFindProduct" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />=-->
                     <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
                                     materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
@@ -38,7 +38,28 @@
 
             </DataGrid>
             </StackPanel>
+            <StackPanel>
+                <StackPanel Margin="0" >
+                    <TextBlock Text="Do zamówienia" Margin="0" Foreground="Black" TextAlignment="Center" FontSize="20" ></TextBlock>
+                    <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                            <materialDesign:PackIcon Kind="OrderAlphabeticalAscending" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
 
+                            <TextBox x:Name="addFindOrder" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź zamówienie" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />
+
+                            <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnAddFindedOrder" Content="Szukaj" Cursor="Hand" Height="20" Click="btnAddFindedOrder_Click">
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                    <StackPanel>
+                        <DataGrid AutoGenerateColumns="True" x:Name="addFindOraderData"  IsReadOnly="True" >
+
+                        </DataGrid>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

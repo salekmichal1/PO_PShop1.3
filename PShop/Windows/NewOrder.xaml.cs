@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PShop.Tables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,10 +25,10 @@ namespace PShop.Windows
         {
             InitializeComponent();
         }
-        //public static class Globals
-        //{
-        //    public static int quantity { get; set; }
-        //}
+        public class Globals
+        {
+           public static DataGridCellInfo cellInfoProduct;
+        }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -56,6 +57,7 @@ namespace PShop.Windows
 
         }
         
+
         private void btnNewOrderFindProduct_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -73,7 +75,8 @@ namespace PShop.Windows
                                   };
                     newOrderProductData.ItemsSource = produts.ToList();
                     newOrderProductData.Items.Refresh();
-
+                    newOrderProductData.SelectAll();
+                    Globals.cellInfoProduct = newOrderProductData.SelectedCells[0];
                 }
                 else
                 {
@@ -102,7 +105,7 @@ namespace PShop.Windows
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
             int number;
-            int quantity = int.Parse(productQuantity.Text);
+            string quantity = productQuantity.Text;
 
             //var productsList = App.dbContext.Products.Where(t => chuj.Contains(t.Id)).Select();
             var idSelectProduct = from Product in App.dbContext.Products
@@ -114,7 +117,6 @@ namespace PShop.Windows
 
             MainWindow.GlobalsList.productQunatity.Add(quantity);
 
-
             var productsList = from Product in App.dbContext.Products
                                where MainWindow.GlobalsList.selectedProductId.Contains(Product.Id)
                                select new
@@ -122,7 +124,7 @@ namespace PShop.Windows
                                    SKU = Product.Id,
                                    Nazwa = Product.ProductName,
                                    Cena = Product.NetSellingPrice,
-                                   Ilość = quantity
+                                   Ilość = MainWindow.GlobalsList.productQunatity.LastOrDefault()
                                };
 
             var mainWindow = Application.Current.Windows
@@ -131,7 +133,73 @@ namespace PShop.Windows
 
             mainWindow.newOrderAddedProducts.ItemsSource = productsList.ToList();
             mainWindow.newOrderAddedProducts.Items.Refresh();
+
+            var selecteProductId = (Globals.cellInfoProduct.Column.GetCellContent(Globals.cellInfoProduct.Item) as TextBlock).Text;
+
+            var cellInfoOrder = addFindOraderData.SelectedCells[0];
+            var selectedOrderId = (cellInfoOrder.Column.GetCellContent(cellInfoOrder.Item) as TextBlock).Text;
+
+            try
+            {
+                App.dbContext.OrderedProducts.Add(new OrderedProduct
+                {
+                    OrderId = int.Parse(selectedOrderId),
+                    ProductId = int.Parse(selecteProductId),
+                    Quantity = int.Parse(productQuantity.Text)
+                });
+                App.dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.InnerException.Message);
+            }
+
             this.Close();
+        }
+
+        private void btnAddFindedOrder_Click(object sender, RoutedEventArgs e)
+        {
+            if (addFindOrder.Text != "")
+            {
+                int number;
+                var orders = from Order in App.dbContext.Orders
+                             join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
+                             where Order.WhetherTheOrderFulfilled == false && Order.Id == (int.TryParse(addFindOrder.Text, out number) ? number : 0) || Order.WhetherTheOrderFulfilled == false && Customers.Surname == addFindOrder.Text
+                             group new { Order, Customers } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
+                             select new
+                             {
+                                 NumerZamówienia = gr.Key.Id,
+                                 Imie = gr.Key.CustomerName,
+                                 Nazwisko = gr.Key.Surname,
+                             };
+
+                addFindOraderData.ItemsSource = orders.ToList();
+                addFindOraderData.Items.Refresh();
+                //string query = $"SELECT orders.id AS [Numer zamówienia], customers.customer_name AS Imie, customers.surname AS Nazwisko, SUM(ordered_products.quantity * products.net_selling_price) AS Wartość FROM orders JOIN ordered_products ON orders.id = ordered_products.order_id JOIN products ON products.id = ordered_products.product_id JOIN customers ON customers.id = orders.customer_id WHERE orders.whether_the_order_fulfilled = '0' AND orders.id='{(int.TryParse(findOrder.Text, out int number) ? number : 0)}' OR customers.surname='{findOrder.Text}' GROUP BY orders.id, customers.customer_name, customers.surname";
+                //downloadData(query, orderData);
+            }
+            else
+            {
+                var orders = from Order in App.dbContext.Orders
+                             join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
+                             where Order.WhetherTheOrderFulfilled == false
+                             group new { Order, Customers } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
+                             select new
+                             {
+                                 NumerZamówienia = gr.Key.Id,
+                                 Imie = gr.Key.CustomerName,
+                                 Nazwisko = gr.Key.Surname,
+                             };
+
+                addFindOraderData.ItemsSource = orders.ToList();
+                addFindOraderData.Items.Refresh();
+                //string query = $"SELECT orders.id AS [Numer zamówienia], customers.customer_name AS Imie, customers.surname AS Nazwisko, SUM(ordered_products.quantity * products.net_selling_price) AS Wartość FROM orders JOIN ordered_products ON orders.id = ordered_products.order_id JOIN products ON products.id = ordered_products.product_id JOIN customers ON customers.id = orders.customer_id WHERE orders.whether_the_order_fulfilled = '0' GROUP BY orders.id, customers.customer_name, customers.surname";
+                //downloadData(query, orderData);
+            }
+            if (addFindOraderData.Items.Count == 0)
+            {
+                MessageBox.Show("Brak zamówienia lub zrealizowane");
+            }
         }
     }
 }

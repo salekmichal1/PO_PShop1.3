@@ -35,7 +35,7 @@ namespace PShop
         public static class GlobalsList
         {
            static public List<int> selectedProductId = new List<int>();
-            static public List<int> productQunatity = new List<int>();
+            static public List<string> productQunatity = new List<string>();
 
         }
         //public void downloadData(string query, DataGrid tableData)
@@ -199,22 +199,28 @@ namespace PShop
             addCustomer.Show();
         }
 
-        private void btnNewOrder_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-
         private void btnNewOrderFindClient_Click(object sender, RoutedEventArgs e)
         {
+            var max = (from Order in App.dbContext.Orders
+                where
+                  Order.WhetherTheOrderFulfilled == false
+                orderby
+                  Order.Id descending
+                select new
+                {
+                    Order.Id
+                }).FirstOrDefault();
+
             try
             {
+                
                 if (newOrderFindClient.Text != "")
                 {
                     var customers = from Customer in App.dbContext.Customers
                                     where Customer.PhoneNumber == newOrderFindClient.Text || Customer.CompanyNumber == int.Parse(newOrderFindClient.Text)
                                     select new
                                     {
+                                        Numer = Customer.Id,
                                         Imie = Customer.CustomerName,
                                         Nazwisko = Customer.Surname,
                                         Frima = Customer.CompanyName,
@@ -229,6 +235,8 @@ namespace PShop
                                     };
                     newOrderClientData.ItemsSource = customers.ToList();
                     newOrderClientData.Items.Refresh();
+                    newOrderClientData.SelectAll();
+                    orderId.Text = max.ToString();
                 }
                 else
                 {
@@ -238,6 +246,37 @@ namespace PShop
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        
+        private void btnNewOrder_Click(object sender, RoutedEventArgs e)
+        {
+            var cellInfo = newOrderClientData.SelectedCells[0];
+            var selectedClientID = (cellInfo.Column.GetCellContent(cellInfo.Item) as TextBlock).Text;
+            try
+            {
+                App.dbContext.Orders.Add(new Order
+                {
+                    CustomerId = int.Parse(selectedClientID),
+                    DateOfPlacingTheOrder = DateTime.Now,
+                    OrderRealizationDate = null,
+                    WhetherTheOrderFulfilled = false,
+                    ShippingDate = null,
+                    EmployeeId = 1,
+                    InvoiceId = 5,
+                   
+                });
+                App.dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(DateTime.Now.Date.ToString());
+                MessageBox.Show(ex.InnerException.Message);
+            }
+            finally
+            {
+                //App.dbContext.DisposeAsync();
             }
         }
 

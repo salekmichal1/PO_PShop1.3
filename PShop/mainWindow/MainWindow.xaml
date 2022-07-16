@@ -89,6 +89,8 @@
                                     materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
                                     Background="White" Foreground="Black" ToolTip="Find" x:Name="btnNewOrder" Content="Nowe zamówienie" Cursor="Hand" Height="20" Click="btnNewOrder_Click">
                                 </Button>
+
+                                <TextBlock x:Name="orderId" Margin="10 0 0 0" Padding="2" Text="0"  FontSize="12" Foreground="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow" TextAlignment="Center" ></TextBlock>
                                 <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true" Margin="10 0 0 0"
                                     materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
                                     Background="White" Foreground="Black" ToolTip="Find" x:Name="btnProductAdd" Content="Dodaj produkty" Cursor="Hand" Height="20" Click="btnProductAdd_Click">
