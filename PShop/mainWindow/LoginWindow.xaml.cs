@@ -27,7 +27,7 @@ namespace PShop
         }
         public int count;
 
-        public class Global
+        public class loginWindowGlobalVariables
         {
             public static int employeeId;
         }
@@ -51,7 +51,7 @@ namespace PShop
                     count = Convert.ToInt32(sqlCommand.ExecuteScalar());
                     if(Convert.ToBoolean(count))
                     {
-                        Global.employeeId = count;
+                        loginWindowGlobalVariables.employeeId = count;
                         MainWindow dashboard = new MainWindow();
                         dashboard.Show();
                         this.Close();

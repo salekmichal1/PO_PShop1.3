@@ -25,9 +25,12 @@ namespace PShop.Windows
         {
             InitializeComponent();
         }
-        public class Globals
+        public class newOrderVariables
         {
            public static DataGridCellInfo cellInfoProduct;
+            public static DataGridCellInfo cellInfoOrder;
+            public static string selectedOrderId;
+            public static string selecteProductId;
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -76,7 +79,6 @@ namespace PShop.Windows
                     newOrderProductData.ItemsSource = produts.ToList();
                     newOrderProductData.Items.Refresh();
                     newOrderProductData.SelectAll();
-                    Globals.cellInfoProduct = newOrderProductData.SelectedCells[0];
                 }
                 else
                 {
@@ -101,13 +103,24 @@ namespace PShop.Windows
         //}
 
         //List<int> chuj = new List<int>();
+        private void newOrderProductData_Selected(object sender, RoutedEventArgs e)
+        {
+            newOrderVariables.cellInfoProduct = newOrderProductData.SelectedCells[0];
+            newOrderVariables.selecteProductId = (newOrderVariables.cellInfoProduct.Column.GetCellContent(newOrderVariables.cellInfoProduct.Item) as TextBlock).Text;
+
+        }
+
+        private void addFindOraderData_Selected(object sender, RoutedEventArgs e)
+        {
+            newOrderVariables.cellInfoOrder = addFindOraderData.SelectedCells[0];
+            newOrderVariables.selectedOrderId = (newOrderVariables.cellInfoOrder.Column.GetCellContent(newOrderVariables.cellInfoOrder.Item) as TextBlock).Text;
+        }
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
             int number;
             string quantity = productQuantity.Text;
 
-            //var productsList = App.dbContext.Products.Where(t => chuj.Contains(t.Id)).Select();
             var idSelectProduct = from Product in App.dbContext.Products
                      where Product.ProductName == newOrderFindProduct.Text || Product.Id == (int.TryParse(newOrderFindProduct.Text, out number) ? number : 0)
                      select Product.Id;
@@ -127,6 +140,7 @@ namespace PShop.Windows
                                    Ilość = MainWindow.GlobalsList.productQunatity.LastOrDefault()
                                };
 
+            // lista w mainwindow nowe zamówienie
             var mainWindow = Application.Current.Windows
                 .OfType<MainWindow>()
                 .FirstOrDefault(window => window is MainWindow);
@@ -134,27 +148,32 @@ namespace PShop.Windows
             mainWindow.newOrderAddedProducts.ItemsSource = productsList.ToList();
             mainWindow.newOrderAddedProducts.Items.Refresh();
 
-            var selecteProductId = (Globals.cellInfoProduct.Column.GetCellContent(Globals.cellInfoProduct.Item) as TextBlock).Text;
+            ///////////////////////////////////////////////////////////////////////////
 
-            var cellInfoOrder = addFindOraderData.SelectedCells[0];
-            var selectedOrderId = (cellInfoOrder.Column.GetCellContent(cellInfoOrder.Item) as TextBlock).Text;
 
-            try
+            if (newOrderVariables.selectedOrderId != null && productQuantity.Text != "" && newOrderVariables.selecteProductId != null)
             {
-                App.dbContext.OrderedProducts.Add(new OrderedProduct
+                try
                 {
-                    OrderId = int.Parse(selectedOrderId),
-                    ProductId = int.Parse(selecteProductId),
-                    Quantity = int.Parse(productQuantity.Text)
-                });
-                App.dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.InnerException.Message);
-            }
+                    App.dbContext.OrderedProducts.Add(new OrderedProduct
+                    {
+                        OrderId = int.Parse(newOrderVariables.selectedOrderId),
+                        ProductId = int.Parse(newOrderVariables.selecteProductId),
+                        Quantity = int.Parse(productQuantity.Text)
+                    });
+                    App.dbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.InnerException.Message);
+                }
 
-            this.Close();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Ilość, produkt, lub zamówienie nie zostały wybrane");
+            }
         }
 
         private void btnAddFindedOrder_Click(object sender, RoutedEventArgs e)
@@ -201,5 +220,7 @@ namespace PShop.Windows
                 MessageBox.Show("Brak zamówienia lub zrealizowane");
             }
         }
+
+
     }
 }

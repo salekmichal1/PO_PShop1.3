@@ -62,7 +62,7 @@
                             </StackPanel>
                         </Border>
                         <StackPanel>
-                            <DataGrid AutoGenerateColumns="True" x:Name="orderData"  IsReadOnly="True" >
+                            <DataGrid AutoGenerateColumns="True" x:Name="orderData"  IsReadOnly="True" MouseDoubleClick="orderData_MouseDoubleClick" ItemsSource="{Binding Path=Order}" SelectedItem="{Binding Path=SelectedOrder, Mode=TwoWay}" >
                                 
                             </DataGrid>
                         </StackPanel>

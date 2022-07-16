@@ -60,21 +60,29 @@ namespace PShop.Windows
 
                 if (email == null)
                 {
-                    App.dbContext.Customers.AddAsync(new Customer
+                    if (clientName.Text != "" && clientSurname.Text != "" && clientMail.Text != "" && clientStreet.Text != "" && clientPhone.Text != "" && clientCity.Text != "" && clientPostCode.Text != "" && clientStreetNumber.Text != "")
                     {
-                        CustomerName = clientName.Text,
-                        Surname = clientSurname.Text,
-                        CompanyName = ((clientCompanyName.Text != "") ? clientCompanyName.Text : null),
-                        CompanyNumber = (int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : null),
-                        Street = clientStreet.Text,
-                        StreetNumber = int.Parse(clientStreetNumber.Text),
-                        FlatNumber = (int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : null),
-                        PostCode = clientPostCode.Text,
-                        City = clientCity.Text,
-                        PhoneNumber = clientPhone.Text,
-                        Mail = clientMail.Text
-                    });
-                    App.dbContext.SaveChangesAsync();
+                        App.dbContext.Customers.AddAsync(new Customer
+                        {
+                            CustomerName = clientName.Text,
+                            Surname = clientSurname.Text,
+                            CompanyName = ((clientCompanyName.Text != "") ? clientCompanyName.Text : null),
+                            CompanyNumber = (int.TryParse(clientCompanyNubmer.Text, out int companyNumber) ? companyNumber : null),
+                            Street = clientStreet.Text,
+                            StreetNumber = int.Parse(clientStreetNumber.Text),
+                            FlatNumber = (int.TryParse(clientFlatNumber.Text, out int flatNumber) ? flatNumber : null),
+                            PostCode = clientPostCode.Text,
+                            City = clientCity.Text,
+                            PhoneNumber = clientPhone.Text,
+                            Mail = clientMail.Text
+                        });
+                        App.dbContext.SaveChangesAsync();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Brakuje danych");
+                    }
                 }
                 else
                 {
@@ -84,11 +92,6 @@ namespace PShop.Windows
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.Message);
-            }
-            finally
-            {
-                App.dbContext.DisposeAsync();
-                this.Close();
             }
         }
     }

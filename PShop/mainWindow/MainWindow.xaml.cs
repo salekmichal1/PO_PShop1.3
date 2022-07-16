@@ -35,8 +35,8 @@ namespace PShop
         public static class GlobalsList
         {
            static public List<int> selectedProductId = new List<int>();
-            static public List<string> productQunatity = new List<string>();
-
+           static public List<string> productQunatity = new List<string>();
+           static public int max;
         }
         //public void downloadData(string query, DataGrid tableData)
         //{
@@ -99,7 +99,7 @@ namespace PShop
             }
             if (orderData.Items.Count == 0)
             {
-                MessageBox.Show("Brak zamówienia lub zrealizowane");
+                MessageBox.Show("Brak zamówienia, zrealizowane lub bez produtków");
             }
 
         }
@@ -201,15 +201,12 @@ namespace PShop
 
         private void btnNewOrderFindClient_Click(object sender, RoutedEventArgs e)
         {
-            var max = (from Order in App.dbContext.Orders
+             GlobalsList.max = (from Order in App.dbContext.Orders
                 where
                   Order.WhetherTheOrderFulfilled == false
                 orderby
                   Order.Id descending
-                select new
-                {
-                    Order.Id
-                }).FirstOrDefault();
+                select Order.Id).FirstOrDefault();
 
             try
             {
@@ -236,7 +233,7 @@ namespace PShop
                     newOrderClientData.ItemsSource = customers.ToList();
                     newOrderClientData.Items.Refresh();
                     newOrderClientData.SelectAll();
-                    orderId.Text = max.ToString();
+                    orderId.Text = GlobalsList.max.ToString();
                 }
                 else
                 {
@@ -268,10 +265,12 @@ namespace PShop
                    
                 });
                 App.dbContext.SaveChangesAsync();
+                GlobalsList.max += 1;
+                orderId.Text = GlobalsList.max.ToString();
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show(DateTime.Now.Date.ToString());
                 MessageBox.Show(ex.InnerException.Message);
             }
             finally
@@ -286,7 +285,13 @@ namespace PShop
 
             newOrder.Show();
         }
-        
+
+        private void orderData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            SellWindow sellWindow = new SellWindow();
+
+            sellWindow.Show();
+        }
     }
     
 }
