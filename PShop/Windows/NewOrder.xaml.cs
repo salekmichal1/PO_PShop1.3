@@ -27,10 +27,12 @@ namespace PShop.Windows
         }
         public class newOrderVariables
         {
-           public static DataGridCellInfo cellInfoProduct;
-            public static DataGridCellInfo cellInfoOrder;
-            public static string selectedOrderId;
-            public static string selecteProductId;
+            public static DataGridCellInfo cellInfoProduct { get; set; }
+            public static string selecteProductId { get; set; }
+
+            public static DataGridCellInfo cellInfoNewOrder { get; set; }
+            public static string selectedNewOrderId { get; set; }
+           
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -52,11 +54,6 @@ namespace PShop.Windows
 
             List<string> empnames = empnamesEnum.ToList();
             newOrderFindProduct.ItemsSource = empnames;
-
-            //foreach (string cus in empnames)
-            //{
-            //    MessageBox.Show(cus);
-            //}
 
         }
         
@@ -112,8 +109,8 @@ namespace PShop.Windows
 
         private void addFindOraderData_Selected(object sender, RoutedEventArgs e)
         {
-            newOrderVariables.cellInfoOrder = addFindOraderData.SelectedCells[0];
-            newOrderVariables.selectedOrderId = (newOrderVariables.cellInfoOrder.Column.GetCellContent(newOrderVariables.cellInfoOrder.Item) as TextBlock).Text;
+            newOrderVariables.cellInfoNewOrder = addFindOraderData.SelectedCells[0];
+            newOrderVariables.selectedNewOrderId = (newOrderVariables.cellInfoNewOrder.Column.GetCellContent(newOrderVariables.cellInfoNewOrder.Item) as TextBlock).Text;
         }
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
@@ -126,24 +123,22 @@ namespace PShop.Windows
                      select Product.Id;
 
             int idConvertInt = Convert.ToInt32(idSelectProduct.FirstOrDefault());
-            MainWindow.GlobalsList.selectedProductId.Add(idConvertInt);
+            MainWindow.GlobalsMainWindow.selectedProductId.Add(idConvertInt);
 
-            MainWindow.GlobalsList.productQunatity.Add(quantity);
+            MainWindow.GlobalsMainWindow.productQunatity.Add(quantity);
 
             var productsList = from Product in App.dbContext.Products
-                               where MainWindow.GlobalsList.selectedProductId.Contains(Product.Id)
+                               where MainWindow.GlobalsMainWindow.selectedProductId.Contains(Product.Id)
                                select new
                                {
                                    SKU = Product.Id,
                                    Nazwa = Product.ProductName,
                                    Cena = Product.NetSellingPrice,
-                                   Ilość = MainWindow.GlobalsList.productQunatity.LastOrDefault()
+                                   Ilość = MainWindow.GlobalsMainWindow.productQunatity.LastOrDefault()
                                };
 
             // lista w mainwindow nowe zamówienie
-            var mainWindow = Application.Current.Windows
-                .OfType<MainWindow>()
-                .FirstOrDefault(window => window is MainWindow);
+            var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault(window => window is MainWindow);
 
             mainWindow.newOrderAddedProducts.ItemsSource = productsList.ToList();
             mainWindow.newOrderAddedProducts.Items.Refresh();
@@ -151,13 +146,13 @@ namespace PShop.Windows
             ///////////////////////////////////////////////////////////////////////////
 
 
-            if (newOrderVariables.selectedOrderId != null && productQuantity.Text != "" && newOrderVariables.selecteProductId != null)
+            if (newOrderVariables.selectedNewOrderId != null && productQuantity.Text != "" && newOrderVariables.selecteProductId != null)
             {
                 try
                 {
                     App.dbContext.OrderedProducts.Add(new OrderedProduct
                     {
-                        OrderId = int.Parse(newOrderVariables.selectedOrderId),
+                        OrderId = int.Parse(newOrderVariables.selectedNewOrderId),
                         ProductId = int.Parse(newOrderVariables.selecteProductId),
                         Quantity = int.Parse(productQuantity.Text)
                     });

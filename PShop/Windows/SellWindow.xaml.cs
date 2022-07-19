@@ -23,5 +23,10 @@ namespace PShop.Windows
         {
             InitializeComponent();
         }
+
+        private void btnSellOrder_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

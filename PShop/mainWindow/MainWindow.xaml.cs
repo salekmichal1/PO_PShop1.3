@@ -19,6 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static PShop.LoginWindow;
+using static PShop.Windows.NewOrder;
 
 namespace PShop
 {
@@ -32,11 +33,14 @@ namespace PShop
         {
             InitializeComponent();
         }
-        public static class GlobalsList
+        public static class GlobalsMainWindow
         {
            static public List<int> selectedProductId = new List<int>();
            static public List<string> productQunatity = new List<string>();
-           static public int max;
+           static public int max { get; set; }
+
+           public static DataGridCellInfo cellInfoOrders { get; set; }
+           public static string selectedOrders { get; set; }
         }
         //public void downloadData(string query, DataGrid tableData)
         //{
@@ -201,7 +205,7 @@ namespace PShop
 
         private void btnNewOrderFindClient_Click(object sender, RoutedEventArgs e)
         {
-             GlobalsList.max = (from Order in App.dbContext.Orders
+            GlobalsMainWindow.max = (from Order in App.dbContext.Orders
                 where
                   Order.WhetherTheOrderFulfilled == false
                 orderby
@@ -233,7 +237,7 @@ namespace PShop
                     newOrderClientData.ItemsSource = customers.ToList();
                     newOrderClientData.Items.Refresh();
                     newOrderClientData.SelectAll();
-                    orderId.Text = GlobalsList.max.ToString();
+                    orderId.Text = GlobalsMainWindow.max.ToString();
                 }
                 else
                 {
@@ -265,8 +269,8 @@ namespace PShop
                    
                 });
                 App.dbContext.SaveChangesAsync();
-                GlobalsList.max += 1;
-                orderId.Text = GlobalsList.max.ToString();
+                GlobalsMainWindow.max += 1;
+                orderId.Text = GlobalsMainWindow.max.ToString();
 
             }
             catch (Exception ex)
@@ -288,8 +292,58 @@ namespace PShop
 
         private void orderData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            SellWindow sellWindow = new SellWindow();
 
+            var selectedOrderData = from Customer in App.dbContext.Customers
+                                    join Order in App.dbContext.Orders on Customer.Id equals Order.CustomerId
+                                    where Order.Id == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
+                                    select new
+                                    {
+                                        Imie = Customer.CustomerName,
+                                        Nazwisko = Customer.Surname,
+                                        Frima = Customer.CompanyName,
+                                        NIP = Customer.CompanyNumber,
+                                        Ulica = Customer.Street,
+                                        Numer_domu = Customer.StreetNumber,
+                                        Numer_mieszkania = Customer.FlatNumber,
+                                        Kod_pocztowy = Customer.PostCode,
+                                        Miasto = Customer.City,
+                                        Numer_telefonu = Customer.PhoneNumber,
+                                        Mail = Customer.Mail
+                                    };
+
+            var createdBy = from Order in App.dbContext.Orders
+                            join Employees in App.dbContext.Employees on Order.EmployeeId equals Employees.Id
+                            where Order.Id == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
+                            select $"{Employees.EmployeeName} {Employees.EmployeeSurname}";
+
+            var orderValue = from OrderedProduct in App.dbContext.OrderedProducts
+                             join Product in App.dbContext.Products on OrderedProduct.ProductId equals Product.Id
+                             where OrderedProduct.OrderId == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
+                             group new { OrderedProduct, Product } by new { OrderedProduct.Quantity, Product.NetSellingPrice } into gr
+                             select gr.Sum(x => x.OrderedProduct.Quantity * x.Product.NetSellingPrice);
+
+            var productsList = from Product in App.dbContext.Products
+                               join OrderedProduct in App.dbContext.OrderedProducts on Product.Id equals OrderedProduct.ProductId
+                               where OrderedProduct.OrderId == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
+                               select new
+                               {
+                                   SKU = Product.Id,
+                                   Nazwa = Product.ProductName,
+                                   Cena = Product.NetSellingPrice,
+                                   Ilość = OrderedProduct.Quantity
+                               };
+
+            GlobalsMainWindow.cellInfoOrders = orderData.SelectedCells[0];
+            GlobalsMainWindow.selectedOrders = (GlobalsMainWindow.cellInfoOrders.Column.GetCellContent(GlobalsMainWindow.cellInfoOrders.Item) as TextBlock).Text;
+           
+            SellWindow sellWindow = new SellWindow();
+            sellWindow.selectedOrderId.Text = GlobalsMainWindow.selectedOrders.ToString();
+            sellWindow.orderTotalValue.Text = $"Wartść zamówienia: {orderValue.Sum()}";
+            sellWindow.selectedOrderDataSellWindow.ItemsSource = selectedOrderData.ToList();
+            sellWindow.selectedOrderDataSellWindow.Items.Refresh();
+            sellWindow.selectedProductsSellWindow.ItemsSource = productsList.ToList();
+            sellWindow.selectedProductsSellWindow.Items.Refresh();
+            sellWindow.employeesData.Text = $"Stworzone przez: {createdBy.FirstOrDefault()}";
             sellWindow.Show();
         }
     }
