@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:PShop"
              xmlns:input="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
              xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
-             StartupUri="mainWindow/MainWindow.xaml">
+             StartupUri="mainWindow/LoginWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

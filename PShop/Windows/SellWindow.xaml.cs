@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static PShop.MainWindow;
 
 namespace PShop.Windows
 {
@@ -26,7 +27,13 @@ namespace PShop.Windows
 
         private void btnSellOrder_Click(object sender, RoutedEventArgs e)
         {
+            (from Order in App.dbContext.Orders
+             where Order.Id == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
+             select Order).ToList().ForEach(x => x.WhetherTheOrderFulfilled = true);
 
+            App.dbContext.SaveChanges();
+
+            this.Close();
         }
     }
 }

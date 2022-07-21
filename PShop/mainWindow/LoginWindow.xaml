@@ -22,7 +22,7 @@
             <Border BorderBrush="Black" BorderThickness="0 0 0 1" Width="300" Margin="10">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="Lock" Width="40" Height="35" Foreground="Black"/>
-                    <PasswordBox x:Name="txtPassword" Margin="10 0 0 0" Padding="0 10 0 0" materialDesign:HintAssist.Hint="********" FontSize="22" Foreground="Black" Width="250" BorderBrush="White" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" />
+                    <PasswordBox x:Name="txtPassword" Margin="10 0 0 0" Padding="0 10 0 0" materialDesign:HintAssist.Hint="********" FontSize="22" Foreground="Black" Width="250" BorderBrush="White" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow" />
                 </StackPanel>
             </Border>
             <StackPanel Margin="10" HorizontalAlignment="Center">

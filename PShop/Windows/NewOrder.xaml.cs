@@ -25,13 +25,14 @@ namespace PShop.Windows
         {
             InitializeComponent();
         }
+
         public class newOrderVariables
         {
             public static DataGridCellInfo cellInfoProduct { get; set; }
-            public static string selecteProductId { get; set; }
+            public static string selecteProductId = "";
 
             public static DataGridCellInfo cellInfoNewOrder { get; set; }
-            public static string selectedNewOrderId { get; set; }
+            public static string selectedNewOrderId = "";
            
         }
 
@@ -43,21 +44,13 @@ namespace PShop.Windows
 
         private void newOrderFindClient1_GotFocus(object sender, RoutedEventArgs e)
         {
-            //customers = (from customer in App.dbContext.Customers
-            //             select new
-            //             {
-            //                 customer.Surname
-            //             }).ToDictionary();
-
             var empnamesEnum = from Product in App.dbContext.Products
-                               select $"{(Product.Id).ToString()} {Product.ProductName} {Product.NetSellingPrice}";
+                               select Product.ProductName;
 
             List<string> empnames = empnamesEnum.ToList();
             newOrderFindProduct.ItemsSource = empnames;
-
         }
         
-
         private void btnNewOrderFindProduct_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -75,7 +68,6 @@ namespace PShop.Windows
                                   };
                     newOrderProductData.ItemsSource = produts.ToList();
                     newOrderProductData.Items.Refresh();
-                    newOrderProductData.SelectAll();
                 }
                 else
                 {
@@ -88,23 +80,10 @@ namespace PShop.Windows
             }
         }
 
-        //public IEnumerable<DataGridRow> GetDataGridRows(DataGrid grid)
-        //{
-        //    var itemsSource = grid.ItemsSource as IEnumerable;
-        //    if (null == itemsSource) yield return null;
-        //    foreach (var item in itemsSource)
-        //    {
-        //        var row = grid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-        //        if (null != row) yield return row;
-        //    }
-        //}
-
-        //List<int> chuj = new List<int>();
         private void newOrderProductData_Selected(object sender, RoutedEventArgs e)
         {
             newOrderVariables.cellInfoProduct = newOrderProductData.SelectedCells[0];
             newOrderVariables.selecteProductId = (newOrderVariables.cellInfoProduct.Column.GetCellContent(newOrderVariables.cellInfoProduct.Item) as TextBlock).Text;
-
         }
 
         private void addFindOraderData_Selected(object sender, RoutedEventArgs e)
@@ -115,54 +94,41 @@ namespace PShop.Windows
 
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
-            int number;
-            string quantity = productQuantity.Text;
 
-            var idSelectProduct = from Product in App.dbContext.Products
-                     where Product.ProductName == newOrderFindProduct.Text || Product.Id == (int.TryParse(newOrderFindProduct.Text, out number) ? number : 0)
-                     select Product.Id;
-
-            int idConvertInt = Convert.ToInt32(idSelectProduct.FirstOrDefault());
-            MainWindow.GlobalsMainWindow.selectedProductId.Add(idConvertInt);
-
-            MainWindow.GlobalsMainWindow.productQunatity.Add(quantity);
-
-            var productsList = from Product in App.dbContext.Products
-                               where MainWindow.GlobalsMainWindow.selectedProductId.Contains(Product.Id)
-                               select new
-                               {
-                                   SKU = Product.Id,
-                                   Nazwa = Product.ProductName,
-                                   Cena = Product.NetSellingPrice,
-                                   Ilość = MainWindow.GlobalsMainWindow.productQunatity.LastOrDefault()
-                               };
-
-            // lista w mainwindow nowe zamówienie
-            var mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault(window => window is MainWindow);
-
-            mainWindow.newOrderAddedProducts.ItemsSource = productsList.ToList();
-            mainWindow.newOrderAddedProducts.Items.Refresh();
-
-            ///////////////////////////////////////////////////////////////////////////
-
-
-            if (newOrderVariables.selectedNewOrderId != null && productQuantity.Text != "" && newOrderVariables.selecteProductId != null)
+            if (newOrderVariables.selectedNewOrderId != "" && productQuantity.Text != "" && newOrderVariables.selecteProductId != "")
             {
                 try
                 {
-                    App.dbContext.OrderedProducts.Add(new OrderedProduct
+                    var selectedProductExist = from OrderedProduct in App.dbContext.OrderedProducts
+                                               where OrderedProduct.OrderId == Convert.ToInt32(newOrderVariables.selectedNewOrderId) && OrderedProduct.ProductId == Convert.ToInt32(newOrderVariables.selecteProductId)
+                                               select OrderedProduct.Id;
+
+                    if (selectedProductExist.Any())
                     {
-                        OrderId = int.Parse(newOrderVariables.selectedNewOrderId),
-                        ProductId = int.Parse(newOrderVariables.selecteProductId),
-                        Quantity = int.Parse(productQuantity.Text)
-                    });
-                    App.dbContext.SaveChangesAsync();
+                       (from OrderedProduct in App.dbContext.OrderedProducts
+                        where OrderedProduct.OrderId == Convert.ToInt32(newOrderVariables.selectedNewOrderId) && OrderedProduct.ProductId == Convert.ToInt32(newOrderVariables.selecteProductId)
+                        select OrderedProduct).ToList().ForEach(x => x.Quantity += int.Parse(productQuantity.Text));
+
+                        App.dbContext.SaveChanges();
+                    }
+                    else
+                    {
+                        App.dbContext.OrderedProducts.Add(new OrderedProduct
+                        {
+                            OrderId = int.Parse(newOrderVariables.selectedNewOrderId),
+                            ProductId = int.Parse(newOrderVariables.selecteProductId),
+                            Quantity = int.Parse(productQuantity.Text)
+                        });
+                        App.dbContext.SaveChangesAsync();
+                    }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.InnerException.Message);
                 }
 
+                newOrderVariables.selectedNewOrderId = "";
+                newOrderVariables.selecteProductId = "";
                 this.Close();
             }
             else
@@ -189,8 +155,6 @@ namespace PShop.Windows
 
                 addFindOraderData.ItemsSource = orders.ToList();
                 addFindOraderData.Items.Refresh();
-                //string query = $"SELECT orders.id AS [Numer zamówienia], customers.customer_name AS Imie, customers.surname AS Nazwisko, SUM(ordered_products.quantity * products.net_selling_price) AS Wartość FROM orders JOIN ordered_products ON orders.id = ordered_products.order_id JOIN products ON products.id = ordered_products.product_id JOIN customers ON customers.id = orders.customer_id WHERE orders.whether_the_order_fulfilled = '0' AND orders.id='{(int.TryParse(findOrder.Text, out int number) ? number : 0)}' OR customers.surname='{findOrder.Text}' GROUP BY orders.id, customers.customer_name, customers.surname";
-                //downloadData(query, orderData);
             }
             else
             {
@@ -207,8 +171,6 @@ namespace PShop.Windows
 
                 addFindOraderData.ItemsSource = orders.ToList();
                 addFindOraderData.Items.Refresh();
-                //string query = $"SELECT orders.id AS [Numer zamówienia], customers.customer_name AS Imie, customers.surname AS Nazwisko, SUM(ordered_products.quantity * products.net_selling_price) AS Wartość FROM orders JOIN ordered_products ON orders.id = ordered_products.order_id JOIN products ON products.id = ordered_products.product_id JOIN customers ON customers.id = orders.customer_id WHERE orders.whether_the_order_fulfilled = '0' GROUP BY orders.id, customers.customer_name, customers.surname";
-                //downloadData(query, orderData);
             }
             if (addFindOraderData.Items.Count == 0)
             {

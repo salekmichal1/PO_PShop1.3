@@ -33,28 +33,14 @@ namespace PShop
         {
             InitializeComponent();
         }
+
         public static class GlobalsMainWindow
         {
-           static public List<int> selectedProductId = new List<int>();
-           static public List<string> productQunatity = new List<string>();
            static public int max { get; set; }
 
            public static DataGridCellInfo cellInfoOrders { get; set; }
            public static string selectedOrders { get; set; }
         }
-        //public void downloadData(string query, DataGrid tableData)
-        //{
-        //    SqlConnection conection = new SqlConnection(@"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True");
-        //    conection.Open();
-        //    SqlCommand command = new SqlCommand(query, conection);
-        //    DataTable table = new DataTable();
-        //    SqlDataAdapter adapter = new SqlDataAdapter(command);
-        //    adapter.Fill(table);
-        //    tableData.ItemsSource = table.DefaultView;
-        //    command.Dispose();
-        //    conection.Close();
-        //}
-
 
         private void btnFind_Click(object sender, RoutedEventArgs e)
         {
@@ -77,8 +63,6 @@ namespace PShop
 
                 orderData.ItemsSource = orders.ToList();
                 orderData.Items.Refresh();
-                //string query = $"SELECT orders.id AS [Numer zamówienia], customers.customer_name AS Imie, customers.surname AS Nazwisko, SUM(ordered_products.quantity * products.net_selling_price) AS Wartość FROM orders JOIN ordered_products ON orders.id = ordered_products.order_id JOIN products ON products.id = ordered_products.product_id JOIN customers ON customers.id = orders.customer_id WHERE orders.whether_the_order_fulfilled = '0' AND orders.id='{(int.TryParse(findOrder.Text, out int number) ? number : 0)}' OR customers.surname='{findOrder.Text}' GROUP BY orders.id, customers.customer_name, customers.surname";
-                //downloadData(query, orderData);
             }
             else
             {
@@ -93,7 +77,7 @@ namespace PShop
                                  NumerZamówienia = gr.Key.Id,
                                  Imie = gr.Key.CustomerName,
                                  Nazwisko = gr.Key.Surname,
-                                 Wartość = gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice)
+                                 Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice))
                              };
 
                 orderData.ItemsSource = orders.ToList();
@@ -105,7 +89,6 @@ namespace PShop
             {
                 MessageBox.Show("Brak zamówienia, zrealizowane lub bez produtków");
             }
-
         }
 
         private void btnFindClient_Click(object sender, RoutedEventArgs e)
@@ -150,8 +133,6 @@ namespace PShop
             int number;
             if (findFulfilledOrder.Text != "")
             {
-                //string query = $"SELECT orders.id AS [Numer zamówienia], customers.customer_name AS Imie, customers.surname AS Nazwisko, SUM(ordered_products.quantity * products.net_selling_price) AS Wartość FROM orders JOIN ordered_products ON orders.id = ordered_products.order_id JOIN products ON products.id = ordered_products.product_id JOIN customers ON customers.id = orders.customer_id WHERE orders.whether_the_order_fulfilled = '1' AND orders.id='{(int.TryParse(findFulfilledOrder.Text, out int number) ? number : 0)}' OR customers.surname='{findFulfilledOrder.Text}' GROUP BY orders.id, customers.customer_name, customers.surname";
-                //downloadData(query, fulfilledOrder);
                 var fulfilledOrders = from Order in App.dbContext.Orders
                              join OrderedProduts in App.dbContext.OrderedProducts on Order.Id equals OrderedProduts.OrderId
                              join Products in App.dbContext.Products on OrderedProduts.ProductId equals Products.Id
@@ -163,7 +144,7 @@ namespace PShop
                                  NumerZamówienia = gr.Key.Id,
                                  Imie = gr.Key.CustomerName,
                                  Nazwisko = gr.Key.Surname,
-                                 Wartość = gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice)
+                                 Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice))
                              };
 
                 fulfilledOrder.ItemsSource = fulfilledOrders.ToList();
@@ -171,8 +152,6 @@ namespace PShop
             }
             else
             {
-                string query = $"SELECT orders.id AS [Numer zamówienia], customers.customer_name AS Imie, customers.surname AS Nazwisko, SUM(ordered_products.quantity * products.net_selling_price) AS Wartość FROM orders JOIN ordered_products ON orders.id = ordered_products.order_id JOIN products ON products.id = ordered_products.product_id JOIN customers ON customers.id = orders.customer_id WHERE orders.whether_the_order_fulfilled = '1' GROUP BY orders.id, customers.customer_name, customers.surname";
-                //downloadData(query, fulfilledOrder);
                 var fulfilledOrders = from Order in App.dbContext.Orders
                                       join OrderedProduts in App.dbContext.OrderedProducts on Order.Id equals OrderedProduts.OrderId
                                       join Products in App.dbContext.Products on OrderedProduts.ProductId equals Products.Id
@@ -184,7 +163,7 @@ namespace PShop
                                           NumerZamówienia = gr.Key.Id,
                                           Imie = gr.Key.CustomerName,
                                           Nazwisko = gr.Key.Surname,
-                                          Wartość = gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice)
+                                          Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice))
                                       };
                 fulfilledOrder.ItemsSource = fulfilledOrders.ToList();
                 fulfilledOrder.Items.Refresh();
@@ -264,7 +243,7 @@ namespace PShop
                     OrderRealizationDate = null,
                     WhetherTheOrderFulfilled = false,
                     ShippingDate = null,
-                    EmployeeId = 1,
+                    EmployeeId = loginWindowGlobalVariables.employeeId,
                     InvoiceId = 5,
                    
                 });
@@ -276,10 +255,6 @@ namespace PShop
             catch (Exception ex)
             {
                 MessageBox.Show(ex.InnerException.Message);
-            }
-            finally
-            {
-                //App.dbContext.DisposeAsync();
             }
         }
 
@@ -329,7 +304,7 @@ namespace PShop
                                {
                                    SKU = Product.Id,
                                    Nazwa = Product.ProductName,
-                                   Cena = Product.NetSellingPrice,
+                                   Cena = @String.Format("{0:C}", Product.NetSellingPrice),
                                    Ilość = OrderedProduct.Quantity
                                };
 
@@ -338,12 +313,13 @@ namespace PShop
            
             SellWindow sellWindow = new SellWindow();
             sellWindow.selectedOrderId.Text = GlobalsMainWindow.selectedOrders.ToString();
-            sellWindow.orderTotalValue.Text = $"Wartść zamówienia: {orderValue.Sum()}";
+            sellWindow.orderTotalValue.Text = $"Wartść zamówienia: {@String.Format("{0:C}", orderValue.Sum())}";
             sellWindow.selectedOrderDataSellWindow.ItemsSource = selectedOrderData.ToList();
             sellWindow.selectedOrderDataSellWindow.Items.Refresh();
             sellWindow.selectedProductsSellWindow.ItemsSource = productsList.ToList();
             sellWindow.selectedProductsSellWindow.Items.Refresh();
             sellWindow.employeesData.Text = $"Stworzone przez: {createdBy.FirstOrDefault()}";
+
             sellWindow.Show();
         }
     }

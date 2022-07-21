@@ -21,7 +21,7 @@
                 <DataGrid AutoGenerateColumns="True" x:Name="selectedOrderDataSellWindow"  IsReadOnly="True" ItemsSource="{Binding Path=Order}" SelectedItem="{Binding Path=SelectedOrder, Mode=TwoWay}">
 
                 </DataGrid>
-                <TextBlock Text="Lista produktów " Margin="0" Foreground="Black" TextAlignment="Center" FontSize="20"></TextBlock>
+                <TextBlock Text="Lista produktów " Margin="0 10" Foreground="Black" TextAlignment="Center" FontSize="20"></TextBlock>
                 <DataGrid AutoGenerateColumns="True" x:Name="selectedProductsSellWindow"  IsReadOnly="True" ItemsSource="{Binding Path=Product}" SelectedItem="{Binding Path=SelectedProduct, Mode=TwoWay}">
                     
                 </DataGrid>

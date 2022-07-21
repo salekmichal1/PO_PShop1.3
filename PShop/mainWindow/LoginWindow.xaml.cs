@@ -25,6 +25,7 @@ namespace PShop
         {
             InitializeComponent();
         }
+
         public int count;
 
         public class loginWindowGlobalVariables
@@ -34,42 +35,58 @@ namespace PShop
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            string connectionString = @"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True";
+            var user = from Employee in App.dbContext.Employees
+                       where Employee.Login == txtUsername.Text && Employee.Password == txtPassword.Password
+                       select Employee.Id;
 
-            SqlConnection sqlConnection = new SqlConnection(connectionString);
+            if (user.Any())
+            {
+                loginWindowGlobalVariables.employeeId = user.FirstOrDefault();
+                MainWindow dashboard = new MainWindow();
+                dashboard.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Login lub hasło są nieprawidłowe");
+            }
 
-            try
-            {
-                if(sqlConnection.State == ConnectionState.Closed)
-                {
-                    sqlConnection.Open();
-                    string query = "SELECT id FROM Employees WHERE login=@login AND password=@password";
-                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-                    sqlCommand.CommandType = CommandType.Text;
-                    sqlCommand.Parameters.AddWithValue("@login", txtUsername.Text);
-                    sqlCommand.Parameters.AddWithValue("@password", txtPassword.Password);
-                    count = Convert.ToInt32(sqlCommand.ExecuteScalar());
-                    if(Convert.ToBoolean(count))
-                    {
-                        loginWindowGlobalVariables.employeeId = count;
-                        MainWindow dashboard = new MainWindow();
-                        dashboard.Show();
-                        this.Close();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Login lub hasło są nieprawidłowe");
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                sqlConnection.Close();
-            }
+            //string connectionString = @"Data Source=LAPTOP-9A79R96U;Initial Catalog=rtvDatabase;Integrated Security=True";
+
+            //SqlConnection sqlConnection = new SqlConnection(connectionString);
+
+            //try
+            //{
+            //    if(sqlConnection.State == ConnectionState.Closed)
+            //    {
+            //        sqlConnection.Open();
+            //        string query = "SELECT id FROM Employees WHERE login=@login AND password=@password";
+            //        SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            //        sqlCommand.CommandType = CommandType.Text;
+            //        sqlCommand.Parameters.AddWithValue("@login", txtUsername.Text);
+            //        sqlCommand.Parameters.AddWithValue("@password", txtPassword.Password);
+            //        count = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            //        if(Convert.ToBoolean(count))
+            //        {
+            //            loginWindowGlobalVariables.employeeId = count;
+            //            MainWindow dashboard = new MainWindow();
+            //            dashboard.Show();
+            //            this.Close();
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("Login lub hasło są nieprawidłowe");
+            //        }
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
+            //finally
+            //{
+            //    sqlConnection.Close();
+            //}
         }
     }
 }
