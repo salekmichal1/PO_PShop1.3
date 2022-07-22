@@ -18,7 +18,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
                     <materialDesign:PackIcon Kind="AddShoppingCart" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
                     <TextBlock Text="Znajdź produkt:" Margin="2 2 0 0" Foreground="Black" TextAlignment="Center"></TextBlock>
-                    <input:AutoCompleteBox x:Name="newOrderFindProduct" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindClient1_GotFocus" Margin="2 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="70" MaxWidth="200"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow">
+                    <input:AutoCompleteBox x:Name="newOrderFindProduct" ItemsSource="{Binding Path=ItemsList}" GotFocus="newOrderFindProduct_GotFocus" Margin="2 0 10 0" materialDesign:HintAssist.Hint="Znajdź produkt" FontSize="10" Foreground="Black" Width="70" MaxWidth="200"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow">
 
                     </input:AutoCompleteBox>
                     <TextBox PreviewTextInput="TextBox_PreviewTextInput" x:Name="productQuantity" Margin="0 0 10 0" Padding="2"  materialDesign:HintAssist.Hint="Ilość" FontSize="10" Foreground="Black" MaxWidth="30"  BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" Cursor="Arrow" ></TextBox>

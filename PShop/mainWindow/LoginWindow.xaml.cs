@@ -33,6 +33,11 @@ namespace PShop
             public static int employeeId;
         }
 
+        /// <summary>
+        /// event handler for logingin
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             var user = from Employee in App.dbContext.Employees

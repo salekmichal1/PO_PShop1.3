@@ -33,7 +33,9 @@ namespace PShop
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// global varibles for mainwindow
+        /// </summary>
         public static class GlobalsMainWindow
         {
             static public int max { get; set; }
@@ -41,7 +43,12 @@ namespace PShop
             public static DataGridCellInfo cellInfoOrders { get; set; }
             public static string selectedOrders { get; set; }
         }
-
+        /// <summary>
+        /// event handler for searching new orders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
         private void btnFind_Click(object sender, RoutedEventArgs e)
         {
             if (findOrder.Text != "")
@@ -91,6 +98,11 @@ namespace PShop
             }
         }
 
+        /// <summary>
+        /// event handler for searching clients
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnFindClient_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -129,6 +141,11 @@ namespace PShop
             }
         }
 
+        /// <summary>
+        /// event handler for searching closed orders
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnbtnFindFulfilledOrder_Click(object sender, RoutedEventArgs e)
         {
             int number;
@@ -176,6 +193,11 @@ namespace PShop
 
         }
 
+        /// <summary>
+        /// event handler opening window wiht adding new client
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddClient_Click(object sender, RoutedEventArgs e)
         {
             AddCustomer addCustomer = new AddCustomer();
@@ -183,6 +205,11 @@ namespace PShop
             addCustomer.Show();
         }
 
+        /// <summary>
+        /// event handler for searching client and last created order number
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNewOrderFindClient_Click(object sender, RoutedEventArgs e)
         {
             GlobalsMainWindow.max = (from Order in App.dbContext.Orders
@@ -198,7 +225,7 @@ namespace PShop
                 if (newOrderFindClient.Text != "")
                 {
                     var customers = from Customer in App.dbContext.Customers
-                                    where Customer.PhoneNumber == newOrderFindClient.Text || Customer.CompanyNumber == int.Parse(newOrderFindClient.Text)
+                                    where Customer.PhoneNumber == newOrderFindClient.Text || Customer.CompanyNumber == Convert.ToInt64(newOrderFindClient.Text)
                                     select new
                                     {
                                         Numer = Customer.Id,
@@ -226,11 +253,15 @@ namespace PShop
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.InnerException.Message);
             }
         }
 
-
+        /// <summary>
+        /// event handler selecting client id from data grid and adding new order with this client to database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNewOrder_Click(object sender, RoutedEventArgs e)
         {
             var cellInfo = newOrderClientData.SelectedCells[0];
@@ -259,6 +290,11 @@ namespace PShop
             }
         }
 
+        /// <summary>
+        /// event handler opening window wiht adding product to order
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnProductAdd_Click(object sender, RoutedEventArgs e)
         {
             NewOrder newOrder = new NewOrder();
@@ -266,6 +302,11 @@ namespace PShop
             newOrder.Show();
         }
 
+        /// <summary>
+        /// event handler selecting new order and printing this order data to sellwindow 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void orderData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
@@ -324,14 +365,20 @@ namespace PShop
             sellWindow.Show();
         }
 
+        /// <summary>
+        /// event handler for logout
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnLogout_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 loginWindowGlobalVariables.employeeId = 0;
             }
-            catch
+            catch(Exception ex)
             {
+                MessageBox.Show(ex.Message);
 
             }
             this.Hide();

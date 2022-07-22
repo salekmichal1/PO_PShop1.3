@@ -26,6 +26,9 @@ namespace PShop.Windows
             InitializeComponent();
         }
 
+        /// <summary>
+        /// new order global window variables
+        /// </summary>
         public class newOrderVariables
         {
             public static DataGridCellInfo cellInfoProduct { get; set; }
@@ -36,13 +39,23 @@ namespace PShop.Windows
 
         }
 
+        /// <summary>
+        /// method for checking autocomplitebox text value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (!char.IsDigit(e.Text, e.Text.Length - 1))
                 e.Handled = true;
         }
 
-        private void newOrderFindClient1_GotFocus(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// event handler adding automcomlite options to list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newOrderFindProduct_GotFocus(object sender, RoutedEventArgs e)
         {
             var empnamesEnum = from Product in App.dbContext.Products
                                select Product.ProductName;
@@ -51,6 +64,11 @@ namespace PShop.Windows
             newOrderFindProduct.ItemsSource = empnames;
         }
 
+        /// <summary>
+        /// event handler searching products by SKU number
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnNewOrderFindProduct_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -80,18 +98,33 @@ namespace PShop.Windows
             }
         }
 
+        /// <summary>
+        /// method selecting product grom datagrid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void newOrderProductData_Selected(object sender, RoutedEventArgs e)
         {
             newOrderVariables.cellInfoProduct = newOrderProductData.SelectedCells[0];
             newOrderVariables.selecteProductId = (newOrderVariables.cellInfoProduct.Column.GetCellContent(newOrderVariables.cellInfoProduct.Item) as TextBlock).Text;
         }
 
+        /// <summary>
+        /// method selecting order grom datagrid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void addFindOraderData_Selected(object sender, RoutedEventArgs e)
         {
             newOrderVariables.cellInfoNewOrder = addFindOraderData.SelectedCells[0];
             newOrderVariables.selectedNewOrderId = (newOrderVariables.cellInfoNewOrder.Column.GetCellContent(newOrderVariables.cellInfoNewOrder.Item) as TextBlock).Text;
         }
 
+        /// <summary>
+        /// event handler adding product to order in database, also checing if all needed data is selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
 
@@ -137,6 +170,11 @@ namespace PShop.Windows
             }
         }
 
+        /// <summary>
+        /// event handler searching for ordert that is not in realistion
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddFindedOrder_Click(object sender, RoutedEventArgs e)
         {
             if (addFindOrder.Text != "")

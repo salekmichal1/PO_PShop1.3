@@ -25,15 +25,20 @@ namespace PShop.Windows
             InitializeComponent();
         }
 
+        /// <summary>
+        /// event handler changing order status for closed in database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSellOrder_Click(object sender, RoutedEventArgs e)
         {
             (from Order in App.dbContext.Orders
              where Order.Id == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
              select Order).ToList().ForEach(x => x.WhetherTheOrderFulfilled = true);
-
             App.dbContext.SaveChanges();
 
             this.Close();
+
         }
     }
 }
