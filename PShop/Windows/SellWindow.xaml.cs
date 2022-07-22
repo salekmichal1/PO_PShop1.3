@@ -32,9 +32,12 @@ namespace PShop.Windows
         /// <param name="e"></param>
         private void btnSellOrder_Click(object sender, RoutedEventArgs e)
         {
-            (from Order in App.dbContext.Orders
-             where Order.Id == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
-             select Order).ToList().ForEach(x => x.WhetherTheOrderFulfilled = true);
+            var order = from Order in App.dbContext.Orders
+                        where Order.Id == Convert.ToInt32(GlobalsMainWindow.selectedOrders)
+                        select Order;
+
+            order.ToList().ForEach(x => x.WhetherTheOrderFulfilled = true);
+            order.ToList().ForEach(x => x.OrderRealizationDate = DateTime.Now);
             App.dbContext.SaveChanges();
 
             this.Close();

@@ -18,7 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static PShop.LoginWindow;
+using static PShop.D;
 using static PShop.Windows.NewOrder;
 
 namespace PShop
@@ -156,13 +156,14 @@ namespace PShop
                                       join Products in App.dbContext.Products on OrderedProduts.ProductId equals Products.Id
                                       join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
                                       where Order.WhetherTheOrderFulfilled == true && Order.Id == (int.TryParse(findFulfilledOrder.Text, out number) ? number : 0) || Order.WhetherTheOrderFulfilled == true && Customers.Surname == findFulfilledOrder.Text
-                                      group new { Order, Customers, OrderedProduts, Products } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
+                                      group new { Order, Customers, OrderedProduts, Products } by new { Order.Id, Customers.CustomerName, Customers.Surname, Order.OrderRealizationDate } into gr
                                       select new
                                       {
                                           NumerZamówienia = gr.Key.Id,
                                           Imie = gr.Key.CustomerName,
                                           Nazwisko = gr.Key.Surname,
-                                          Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice))
+                                          Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice)),
+                                          Zrealizowane = gr.Key.OrderRealizationDate
                                       };
 
                 fulfilledOrder.ItemsSource = fulfilledOrders.ToList();
@@ -175,13 +176,15 @@ namespace PShop
                                       join Products in App.dbContext.Products on OrderedProduts.ProductId equals Products.Id
                                       join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
                                       where Order.WhetherTheOrderFulfilled == true
-                                      group new { Order, Customers, OrderedProduts, Products } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
+                                      group new { Order, Customers, OrderedProduts, Products } by new { Order.Id, Customers.CustomerName, Customers.Surname, Order.OrderRealizationDate } into gr
                                       select new
                                       {
                                           NumerZamówienia = gr.Key.Id,
                                           Imie = gr.Key.CustomerName,
                                           Nazwisko = gr.Key.Surname,
-                                          Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice))
+                                          Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice)),
+                                          Zrealizowane = gr.Key.OrderRealizationDate
+
                                       };
                 fulfilledOrder.ItemsSource = fulfilledOrders.ToList();
                 fulfilledOrder.Items.Refresh();
@@ -356,10 +359,13 @@ namespace PShop
             SellWindow sellWindow = new SellWindow();
             sellWindow.selectedOrderId.Text = GlobalsMainWindow.selectedOrders.ToString();
             sellWindow.orderTotalValue.Text = $"Wartść zamówienia: {@String.Format("{0:C}", orderValue.Sum())}";
+
             sellWindow.selectedOrderDataSellWindow.ItemsSource = selectedOrderData.ToList();
             sellWindow.selectedOrderDataSellWindow.Items.Refresh();
+
             sellWindow.selectedProductsSellWindow.ItemsSource = productsList.ToList();
             sellWindow.selectedProductsSellWindow.Items.Refresh();
+
             sellWindow.employeesData.Text = $"Stworzone przez: {createdBy.FirstOrDefault()}";
 
             sellWindow.Show();
@@ -382,7 +388,7 @@ namespace PShop
 
             }
             this.Hide();
-            LoginWindow loginWindow = new LoginWindow();
+            D loginWindow = new D();
             loginWindow.Show();
             this.Close();
         }

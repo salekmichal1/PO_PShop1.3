@@ -19,9 +19,9 @@ namespace PShop
     /// <summary>
     /// Logika interakcji dla klasy LoginWindow.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class D : Window
     {
-        public LoginWindow()
+        public D()
         {
             InitializeComponent();
         }

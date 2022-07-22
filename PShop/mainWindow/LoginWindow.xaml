@@ -1,4 +1,4 @@
-﻿<Window x:Class="PShop.LoginWindow"
+﻿<Window x:Class="PShop.D"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,11 +10,11 @@
         Title="MainWindow" Height="400" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" FontFamily="Century Gothic">
     <Grid>
         <StackPanel Margin="20 40" >
-            <TextBlock Text="User Login" Margin="20" Foreground="Black" TextAlignment="Center" FontSize="50" ></TextBlock>
+            <TextBlock Text="Logowanie użytkownika" Margin="20" Foreground="Black" TextAlignment="Center" FontSize="50" ></TextBlock>
             <Border BorderBrush="Black" BorderThickness="0 0 0 1" Width="300" Margin="0 0 0 0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <materialDesign:PackIcon Kind="User" Width="40" Height="35" Foreground="Black" />
-                    <TextBox x:Name="txtUsername" Margin="10 0 0 0" materialDesign:HintAssist.Hint="Enter Username" FontSize="22" Foreground="Black" Width="250" BorderBrush="White" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />
+                    <TextBox x:Name="txtUsername" Margin="10 0 0 0" materialDesign:HintAssist.Hint="Login" FontSize="22" Foreground="Black" Width="250" BorderBrush="White" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" Cursor="Arrow" />
                 </StackPanel>
 
             </Border>
@@ -28,7 +28,7 @@
             <StackPanel Margin="10" HorizontalAlignment="Center">
                 <Button Width="120" Height="50" Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
                          materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="18"
-                         Background="White" Foreground="Black" ToolTip="Login" x:Name="btnLogin" Content="Login" Cursor="Hand" Click="btnLogin_Click">
+                         Background="White" Foreground="Black" ToolTip="Login" x:Name="btnLogin" Content="Zaloguj" Cursor="Hand" Click="btnLogin_Click">
                 </Button>
             </StackPanel>
         </StackPanel>
