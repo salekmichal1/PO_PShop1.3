@@ -33,7 +33,7 @@ namespace PShop.Windows
 
             public static DataGridCellInfo cellInfoNewOrder { get; set; }
             public static string selectedNewOrderId = "";
-           
+
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -50,7 +50,7 @@ namespace PShop.Windows
             List<string> empnames = empnamesEnum.ToList();
             newOrderFindProduct.ItemsSource = empnames;
         }
-        
+
         private void btnNewOrderFindProduct_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -105,9 +105,9 @@ namespace PShop.Windows
 
                     if (selectedProductExist.Any())
                     {
-                       (from OrderedProduct in App.dbContext.OrderedProducts
-                        where OrderedProduct.OrderId == Convert.ToInt32(newOrderVariables.selectedNewOrderId) && OrderedProduct.ProductId == Convert.ToInt32(newOrderVariables.selecteProductId)
-                        select OrderedProduct).ToList().ForEach(x => x.Quantity += int.Parse(productQuantity.Text));
+                        (from OrderedProduct in App.dbContext.OrderedProducts
+                         where OrderedProduct.OrderId == Convert.ToInt32(newOrderVariables.selectedNewOrderId) && OrderedProduct.ProductId == Convert.ToInt32(newOrderVariables.selecteProductId)
+                         select OrderedProduct).ToList().ForEach(x => x.Quantity += int.Parse(productQuantity.Text));
 
                         App.dbContext.SaveChanges();
                     }
@@ -145,12 +145,13 @@ namespace PShop.Windows
                 var orders = from Order in App.dbContext.Orders
                              join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
                              where Order.WhetherTheOrderFulfilled == false && Order.Id == (int.TryParse(addFindOrder.Text, out number) ? number : 0) || Order.WhetherTheOrderFulfilled == false && Customers.Surname == addFindOrder.Text
-                             group new { Order, Customers } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
+                             group new { Order, Customers } by new { Order.Id, Customers.CustomerName, Customers.Surname, Customers.Mail } into gr
                              select new
                              {
                                  NumerZamówienia = gr.Key.Id,
                                  Imie = gr.Key.CustomerName,
                                  Nazwisko = gr.Key.Surname,
+                                 Mail = gr.Key.Mail
                              };
 
                 addFindOraderData.ItemsSource = orders.ToList();
@@ -161,12 +162,13 @@ namespace PShop.Windows
                 var orders = from Order in App.dbContext.Orders
                              join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
                              where Order.WhetherTheOrderFulfilled == false
-                             group new { Order, Customers } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
+                             group new { Order, Customers } by new { Order.Id, Customers.CustomerName, Customers.Surname, Customers.Mail } into gr
                              select new
                              {
                                  NumerZamówienia = gr.Key.Id,
                                  Imie = gr.Key.CustomerName,
                                  Nazwisko = gr.Key.Surname,
+                                 Mail = gr.Key.Mail
                              };
 
                 addFindOraderData.ItemsSource = orders.ToList();
@@ -177,7 +179,6 @@ namespace PShop.Windows
                 MessageBox.Show("Brak zamówienia lub zrealizowane");
             }
         }
-
 
     }
 }

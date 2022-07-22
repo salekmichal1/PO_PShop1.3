@@ -10,8 +10,8 @@
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="200" MaxWidth="1440" MinWidth="620" WindowStartupLocation="CenterScreen" FontFamily="Century Gothic">
     <Grid Margin="0,0,0,0">
-
-        <TabControl Width="auto">
+        <Grid VerticalAlignment="Top">
+        <TabControl Width="auto" VerticalAlignment="Top">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">
@@ -37,7 +37,7 @@
                     </Setter>
                 </Style>
             </TabControl.Resources>
-            
+
             <TabItem x:Name="tabItem">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -63,7 +63,7 @@
                         </Border>
                         <StackPanel>
                             <DataGrid AutoGenerateColumns="True" x:Name="orderData"  IsReadOnly="True" MouseDoubleClick="orderData_MouseDoubleClick" ItemsSource="{Binding Path=Order}" SelectedItem="{Binding Path=SelectedOrder, Mode=TwoWay}" VerticalScrollBarVisibility="Auto" MaxHeight="400" >
-                                
+
                             </DataGrid>
                         </StackPanel>
                     </StackPanel>
@@ -155,40 +155,45 @@
                 </Grid>
 
             </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Zamówienia zrealizowane" Foreground="White" />
-                    </StackPanel>
-                </TabItem.Header>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Zamówienia zrealizowane" Foreground="White" />
+                        </StackPanel>
+                    </TabItem.Header>
 
-                <Grid>
-                    <StackPanel Margin="0" >
-                        <TextBlock Text="Zrealizowane zamówienia" Margin="0" Foreground="Black" TextAlignment="Center" FontSize="20" ></TextBlock>
-                        <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
-                                <materialDesign:PackIcon Kind="OrderAlphabeticalAscending" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
+                    <Grid>
+                        <StackPanel Margin="0" >
+                            <TextBlock Text="Zrealizowane zamówienia" Margin="0" Foreground="Black" TextAlignment="Center" FontSize="20" ></TextBlock>
+                            <Border BorderBrush="Black" BorderThickness="0 1 0 1" Width="auto" Margin="0 0 0 0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,10" Height="20">
+                                    <materialDesign:PackIcon Kind="OrderAlphabeticalAscending" Width="20" Height="20" Foreground="Black" BorderThickness="0" />
 
-                                <TextBox x:Name="findFulfilledOrder" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź zamówienie" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
+                                    <TextBox x:Name="findFulfilledOrder" Padding="2" Margin="10 0 10 0" materialDesign:HintAssist.Hint="Znajdź zamówienie" FontSize="10" Foreground="Black" Width="auto" MaxWidth="200" BorderThickness="1" BorderBrush="Black" materialDesign:TextFieldAssist.DecorationVisibility="Hidden" TextAlignment="Left" />
 
-                                <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
+                                    <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true"
                                     materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
                                     Background="White" Foreground="Black" ToolTip="Find" x:Name="btnFindFulfilledOrder" Content="Szukaj" Cursor="Hand" Height="20" Click="btnbtnFindFulfilledOrder_Click">
-                                </Button>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                            <StackPanel>
+                                <DataGrid AutoGenerateColumns="True" x:Name="fulfilledOrder"  IsReadOnly="True" VerticalScrollBarVisibility="Auto" MaxHeight="400" >
+
+                                </DataGrid>
                             </StackPanel>
-                        </Border>
-                        <StackPanel>
-                            <DataGrid AutoGenerateColumns="True" x:Name="fulfilledOrder"  IsReadOnly="True" VerticalScrollBarVisibility="Auto" MaxHeight="400" >
-
-                            </DataGrid>
                         </StackPanel>
-                    </StackPanel>
 
-                </Grid>
+                    </Grid>
 
-            </TabItem>
-
-        </TabControl>
-
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Grid VerticalAlignment="Bottom">
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="true" MaxWidth="150" HorizontalAlignment="Right" Margin="0 0 20 20"
+                                    materialDesign:ButtonAssist.CornerRadius="0" BorderThickness="1" BorderBrush="Black" FontSize="10"
+                                    Background="White" Foreground="Black" ToolTip="Find" x:Name="btnLogout" Content="Wyloguj" Cursor="Hand" Height="20" Click="btnLogout_Click" >
+            </Button>
+        </Grid>
     </Grid>
 </Window>

@@ -36,10 +36,10 @@ namespace PShop
 
         public static class GlobalsMainWindow
         {
-           static public int max { get; set; }
+            static public int max { get; set; }
 
-           public static DataGridCellInfo cellInfoOrders { get; set; }
-           public static string selectedOrders { get; set; }
+            public static DataGridCellInfo cellInfoOrders { get; set; }
+            public static string selectedOrders { get; set; }
         }
 
         private void btnFind_Click(object sender, RoutedEventArgs e)
@@ -94,7 +94,8 @@ namespace PShop
         private void btnFindClient_Click(object sender, RoutedEventArgs e)
         {
             try
-            {   if (findClient.Text != "")
+            {
+                if (findClient.Text != "")
                 {
                     //string query = $"SELECT customer_name AS Imie, surname AS Nazwisko, company_name AS Frima, company_number AS NIP, street AS Ulica, street_number AS [Numer domu], flat_number AS [Numer mieszkania], post_code AS [Kod pocztowy], city AS Miasto, phone_number AS [Numer telefonu], mail AS Mail  FROM dbo.Customers WHERE phone_number='{int.Parse(findClient.Text)}'";
                     //downloadData(query, clientData);
@@ -134,18 +135,18 @@ namespace PShop
             if (findFulfilledOrder.Text != "")
             {
                 var fulfilledOrders = from Order in App.dbContext.Orders
-                             join OrderedProduts in App.dbContext.OrderedProducts on Order.Id equals OrderedProduts.OrderId
-                             join Products in App.dbContext.Products on OrderedProduts.ProductId equals Products.Id
-                             join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
-                             where Order.WhetherTheOrderFulfilled == true && Order.Id == (int.TryParse(findFulfilledOrder.Text, out number) ? number : 0) || Order.WhetherTheOrderFulfilled == true && Customers.Surname == findFulfilledOrder.Text
-                             group new { Order, Customers, OrderedProduts, Products } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
-                             select new
-                             {
-                                 NumerZamówienia = gr.Key.Id,
-                                 Imie = gr.Key.CustomerName,
-                                 Nazwisko = gr.Key.Surname,
-                                 Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice))
-                             };
+                                      join OrderedProduts in App.dbContext.OrderedProducts on Order.Id equals OrderedProduts.OrderId
+                                      join Products in App.dbContext.Products on OrderedProduts.ProductId equals Products.Id
+                                      join Customers in App.dbContext.Customers on Order.CustomerId equals Customers.Id
+                                      where Order.WhetherTheOrderFulfilled == true && Order.Id == (int.TryParse(findFulfilledOrder.Text, out number) ? number : 0) || Order.WhetherTheOrderFulfilled == true && Customers.Surname == findFulfilledOrder.Text
+                                      group new { Order, Customers, OrderedProduts, Products } by new { Order.Id, Customers.CustomerName, Customers.Surname } into gr
+                                      select new
+                                      {
+                                          NumerZamówienia = gr.Key.Id,
+                                          Imie = gr.Key.CustomerName,
+                                          Nazwisko = gr.Key.Surname,
+                                          Wartość = @String.Format("{0:C}", gr.Sum(x => x.OrderedProduts.Quantity * x.Products.NetSellingPrice))
+                                      };
 
                 fulfilledOrder.ItemsSource = fulfilledOrders.ToList();
                 fulfilledOrder.Items.Refresh();
@@ -178,22 +179,22 @@ namespace PShop
         private void btnAddClient_Click(object sender, RoutedEventArgs e)
         {
             AddCustomer addCustomer = new AddCustomer();
-            
+
             addCustomer.Show();
         }
 
         private void btnNewOrderFindClient_Click(object sender, RoutedEventArgs e)
         {
             GlobalsMainWindow.max = (from Order in App.dbContext.Orders
-                where
-                  Order.WhetherTheOrderFulfilled == false
-                orderby
-                  Order.Id descending
-                select Order.Id).FirstOrDefault();
+                                     where
+                                       Order.WhetherTheOrderFulfilled == false
+                                     orderby
+                                       Order.Id descending
+                                     select Order.Id).FirstOrDefault();
 
             try
             {
-                
+
                 if (newOrderFindClient.Text != "")
                 {
                     var customers = from Customer in App.dbContext.Customers
@@ -229,11 +230,11 @@ namespace PShop
             }
         }
 
-        
+
         private void btnNewOrder_Click(object sender, RoutedEventArgs e)
         {
             var cellInfo = newOrderClientData.SelectedCells[0];
-            var selectedClientID = (cellInfo.Column.GetCellContent(cellInfo.Item) as TextBlock).Text;
+            var selectedClientID = ((TextBlock)cellInfo.Column.GetCellContent(cellInfo.Item)).Text;
             try
             {
                 App.dbContext.Orders.Add(new Order
@@ -245,7 +246,7 @@ namespace PShop
                     ShippingDate = null,
                     EmployeeId = loginWindowGlobalVariables.employeeId,
                     InvoiceId = 5,
-                   
+
                 });
                 App.dbContext.SaveChangesAsync();
                 GlobalsMainWindow.max += 1;
@@ -310,7 +311,7 @@ namespace PShop
 
             GlobalsMainWindow.cellInfoOrders = orderData.SelectedCells[0];
             GlobalsMainWindow.selectedOrders = (GlobalsMainWindow.cellInfoOrders.Column.GetCellContent(GlobalsMainWindow.cellInfoOrders.Item) as TextBlock).Text;
-           
+
             SellWindow sellWindow = new SellWindow();
             sellWindow.selectedOrderId.Text = GlobalsMainWindow.selectedOrders.ToString();
             sellWindow.orderTotalValue.Text = $"Wartść zamówienia: {@String.Format("{0:C}", orderValue.Sum())}";
@@ -322,6 +323,22 @@ namespace PShop
 
             sellWindow.Show();
         }
+
+        private void btnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                loginWindowGlobalVariables.employeeId = 0;
+            }
+            catch
+            {
+
+            }
+            this.Hide();
+            LoginWindow loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
+        }
     }
-    
+
 }
